@@ -1,5 +1,5 @@
 # Learning-Kubernetes
-This project aims to learn Kubernetes based on a local cluster consisting of virtual machines as preparation for the [CKA certification](https://www.cncf.io/certification/cka/) and [CKAD certification](https://www.cncf.io/certification/ckad/) by the Linux Foundation. 
+This project aims to learn Kubernetes to prepare for the [CKA certification](https://www.cncf.io/certification/cka/) and [CKAD certification](https://www.cncf.io/certification/ckad/) based on a local cluster consisting of virtual machines. 
 
 ## Cluster Architecture Setup
 
