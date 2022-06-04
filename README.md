@@ -4,7 +4,9 @@ This project aims to learn Kubernetes to prepare for the [CKA certification](htt
 The Udemy course [Certified Kubernetes Administrator with practice tests](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/) is also used in terms of understanding Kubernetes and preparation for the certification.
 
 ---
-## Important Links (from [Udemy course](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/)) for [Certified Kubernetes Administrator](https://www.cncf.io/certification/cka/)
+## Important Links for [CKA](https://www.cncf.io/certification/cka/)
+
+from [Udemy course](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/)
 
 ### Exam
 - Exam Curriculum Topics: https://github.com/cncf/curriculum
