@@ -48,11 +48,65 @@ etcdctl get / --prefix --key-only --limit=10 \
 ```
 
 ---
-# API Version for different kind of Kubernetes Resources
+# API Version for different kind of Kubernetes resources in yaml manifests
 
-| K8s resource | API Version |
+| kind | API Version |
 | ------------ | ----------- |
 | Pod          | v1          |
 | Service      | v1          |
 | ReplicaSet   | apps/v1     |
 | Deployment   | apps/v1     |
+
+## Example Pod yaml manifest: `pod-definition.yaml`
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: podname
+  namespace: example-namespace
+  labels:
+    app: myapp
+    type: frontend
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+```
+
+## Example Service yaml manifest: `service-definition.yaml`
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: 
+  namespace: example-namespace
+  labels:
+    app: myapp
+spec:
+
+```
+
+## Example ReplicaSet yaml manifest: `replicaset-definition.yaml`
+```yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: 
+  namespace: example-namespace
+  labels:
+    app: myapp
+spec:
+
+```
+## Example Deployment yaml manifest: `deployment-definition.yaml`
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 
+  namespace: example-namespace
+  labels:
+    app: myapp
+spec:
+
+```
