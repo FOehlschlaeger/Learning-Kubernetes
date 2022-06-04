@@ -12,6 +12,9 @@ The Udemy course [Certified Kubernetes Administrator with practice tests](https:
 - Exam Tips: http://training.linuxfoundation.org/go//Important-Tips-CKA-CKAD
 - CKA FAQ: https://www.cncf.io/certification/cka/faq/
 
+### Udemy course KodeKloud Labs
+- Link to KodeKloud Labs of Udemy course: https://kodekloud.com/courses/labs-certified-kubernetes-administrator-with-practice-tests/
+
 ### Udemy course documents
 - Udemy Course Curriculum: https://github.com/mmumshad/kubernetes-the-hard-way
 - Additional documentation, answers to practice questions: https://github.com/kodekloudhub/certified-kubernetes-administrator-course
