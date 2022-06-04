@@ -1,3 +1,6 @@
+# Notes of this course chapter
+
+---
 # ETCD Commands
 
 - `etcdctl` is CLI tool to interact with ETCD key value database
@@ -43,3 +46,13 @@ etcdctl get / --prefix --key-only --limit=10 \
 --cert /etc/kubernetes/pki/etcd/server.crt \
 --key /etc/kubernetes/pki/etcd/server.key"
 ```
+
+---
+# API Version for different kind of Kubernetes Resources
+
+| K8s resource | API Version |
+| ------------ | ----------- |
+| Pod          | v1          |
+| Service      | v1          |
+| ReplicaSet   | apps/v1     |
+| Deployment   | apps/v1     |
