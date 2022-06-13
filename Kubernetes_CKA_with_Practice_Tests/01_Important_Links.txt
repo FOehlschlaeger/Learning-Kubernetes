@@ -1,0 +1,12 @@
+## Important Links (from [Udemy course](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/)) for [Certified Kubernetes Administrator](https://www.cncf.io/certification/cka/)
+
+### Exam
+- Exam Curriculum Topics: https://github.com/cncf/curriculum
+- Candidate Handbook: https://www.cncf.io/certification/candidate-handbook
+- Exam Tips: http://training.linuxfoundation.org/go//Important-Tips-CKA-CKAD
+- CKA FAQ: https://www.cncf.io/certification/cka/faq/
+
+### Udemy course documents
+- Udemy Course Curriculum: https://github.com/mmumshad/kubernetes-the-hard-way
+- Additional documentation, answers to practice questions: https://github.com/kodekloudhub/certified-kubernetes-administrator-course
+- Slack Channel: https://join.slack.com/t/kodekloud/shared_invite/zt-1881nn91v-AtujsktqVQm_2qG7WVZfsQ
