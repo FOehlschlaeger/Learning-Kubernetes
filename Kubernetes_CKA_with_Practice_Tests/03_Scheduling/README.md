@@ -44,4 +44,19 @@ spec:
 
 
 ## Note on editing Pods and Deployments
-- 
+- you cannot edit speicifications of an existing pod other than:
+  - spec.containers[*].image
+  - spec.initContainers[*].image
+  - spec.activeDeadlineSeconds
+  - spec.tolerations
+- 2 options to still edit a running pod:
+  - `kubectl edit pod <pod name>`: opens the vi editor to edit the required properties
+    - but changes are saved in file at temporary location
+    - `kubectl delete pod <pod name>`
+    - ``kubectl create -f /tmp/<temporary-file.yaml>`
+  - ``kubectl get pod <pod name> -o yaml > new-pod.yaml`
+    - `vi new-pod.yaml`: make changes in exported file
+    - `kubectl delete pod <pod name>`
+    - `kubectl create -f new-pod.yaml`
+- in Deployments you can edit any field/property of the POD template, since with every change the deployment will automatically recreate the pod with the made changes
+  - `kubectl edit deployment <deployment name>`: just edit the POD property of the deployment
