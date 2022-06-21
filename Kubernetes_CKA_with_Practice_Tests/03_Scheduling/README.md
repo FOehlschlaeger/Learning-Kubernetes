@@ -60,3 +60,14 @@ spec:
     - `kubectl create -f new-pod.yaml`
 - in Deployments you can edit any field/property of the POD template, since with every change the deployment will automatically recreate the pod with the made changes
   - `kubectl edit deployment <deployment name>`: just edit the POD property of the deployment
+
+## Static Pods
+- kubelet is responsible for creating static pods (pods that are not created via kube-apiserver)
+- kubelet creates controlplane pods (and only pods) such as etcd, kube-apiserver, kube-controller-manager, kube-scheduler
+- kubelet creates on its node the static pods from location at `staticPodPath` path in `/var/lib/kubelet/config.yaml`
+- to create pods without kube-apiserver just create a pod definition yaml manifest at this `staticPodPath` location and kubelet will create a static pod on the node
+- to identify static pods: 
+  - the static pod names from `kubectl get pod --all-namespaces` end with the node name
+  - in `kubectl get pod <pod name> -n <namespace> -o yaml` at `ownerReferences` the parameter `kind: Node` shows if the pod is a static pod
+
+
