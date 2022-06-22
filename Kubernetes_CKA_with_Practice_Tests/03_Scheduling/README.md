@@ -1,5 +1,13 @@
 # Scheduling
 
+## K8s Schedulers
+### References
+- https://github.com/kubernetes/community/blob/master/contributors/devel/sig-scheduling/scheduling_code_hierarchy_overview.md
+- https://kubernetes.io/blog/2017/03/advanced-scheduling-in-kubernetes/
+- https://jvns.ca/blog/2017/07/27/how-does-the-kubernetes-scheduler-work/
+- https://stackoverflow.com/questions/28857993/how-does-kubernetes-scheduler-work
+
+
 ## Note on Resource Requirements and Limits
 - setting default values for CPU and memory for PODs to pick up those values for containers
 - default values for limit (maximum) and request (minimum)
