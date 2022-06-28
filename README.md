@@ -1,6 +1,8 @@
 # Learning-Kubernetes
 This project aims to learn Kubernetes to prepare for the [CKA certification](https://www.cncf.io/certification/cka/) and [CKAD certification](https://www.cncf.io/certification/ckad/) based on a local cluster consisting of virtual machines. 
 
+
+## Udemy
 The Udemy course [Certified Kubernetes Administrator with practice tests](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/) is also used in terms of understanding Kubernetes and preparation for the certification.
 
 ---
