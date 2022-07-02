@@ -11,6 +11,10 @@ Topic in CKAD
 - multi-container pods design patterns
   - ambassador pattern
   - adapter pattern
+- Self-healing applications
+  - self-healing applications through ReplicaSets and Replication Controllers
+  - Replication Controller: ensures that pod is recreates automatically and ensures that enough replicas are running at all times
+  - Liveness and Readiness Probes
 
 ---
 ## Cluster Architecture Setup
