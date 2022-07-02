@@ -49,3 +49,9 @@ kubectl rollout undo deployment/myapp-deployment
   - once the pod that depends on the secret is deleted, kubelet will delete its local copy of the secret data as well
 - safer ways to store secret data
   - Helm Secrets: HashiCorp Vault
+
+
+## Multi-Container Pods Desing Patterns
+- sidecar pattern
+- adapter pattern (discussed in CKAD exam)
+- ambassador pattern (discussed in CKAD exam)
