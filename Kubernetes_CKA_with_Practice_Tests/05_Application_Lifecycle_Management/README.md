@@ -55,3 +55,50 @@ kubectl rollout undo deployment/myapp-deployment
 - sidecar pattern
 - adapter pattern (discussed in CKAD exam)
 - ambassador pattern (discussed in CKAD exam)
+
+
+## [InitContainers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+- in a multi-container pod, each containers lifecycle is expected to run a process that stays alive as long as the pod's lifecycle
+- if any of the containers inside of a pod fails, the pod restarts
+- sometimes a process should run to completion, for example at initialization of the pod: solution **initContainers**
+- **initContainer** configuration
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp.pod
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+  initContainers:
+  - name: init-myservice
+    image: busybox
+    command: ['sh', '-c', 'git clone <some-repository-used-by-application> ; done;']
+```
+- process of initContainer needs to finish before actual other containers are started to be executed
+- in case of multiple initContainers, the container array defined in yaml manifest are run one at a time in sequential order
+- if any of the initContainers fail to complete, the pod is started repeatedly until the initContainer succeed
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp.pod
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+  initContainers:
+  - name: init-myservice
+    image: busybox
+    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2 ; done;']
+  - name: init-mydb
+    image: busybox:1.28
+    command: ['sh', '-c', 'until nslookup mydb; do echo waiting for mydb; sleep 2; done;']
+```
