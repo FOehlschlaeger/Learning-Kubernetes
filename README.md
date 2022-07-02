@@ -1,12 +1,16 @@
 # Learning-Kubernetes
 This project aims to learn Kubernetes to prepare for the [CKA certification](https://www.cncf.io/certification/cka/) and [CKAD certification](https://www.cncf.io/certification/ckad/) based on a local cluster consisting of virtual machines. 
 
+## Resources
 
-## Udemy
-### CKA
+### Links and Tutorials
+- https://github.com/kelseyhightower/kubernetes-the-hard-way
+
+### Udemy
+#### CKA
 The Udemy course [Certified Kubernetes Administrator with practice tests](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/) is also used in terms of understanding Kubernetes and preparation for the certification.
 
-### CKAD
+#### CKAD
 Topic in CKAD
 - multi-container pods design patterns
   - ambassador pattern
