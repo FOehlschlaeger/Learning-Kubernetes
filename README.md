@@ -8,6 +8,7 @@ This project aims to learn Kubernetes to prepare for the [CKA certification](htt
 - `scp` for copying files from one server to another
 - `tmux` for running commands on more than one server at a time
 - `systemd`/`journalctl` for debugging clusters and changing systemd unit files etc.
+- experience with `docker` to run standard containers, used commands to keep docker containers running, understanding images, tags etc.
 
 ## Resources
 ### Links and Tutorials
