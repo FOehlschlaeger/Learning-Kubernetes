@@ -1,9 +1,18 @@
 # Learning-Kubernetes
 This project aims to learn Kubernetes to prepare for the [CKA certification](https://www.cncf.io/certification/cka/) and [CKAD certification](https://www.cncf.io/certification/ckad/) based on a local cluster consisting of virtual machines. 
 
-## Resources
+## Prerequisites:
+- Linux CLI skills
+- `vi`/`nano` as editor for yaml files
+- `grep`/`awk`/`head`/`tail`/`cat` for providing output from commands 
+- `scp` for copying files from one server to another
+- `tmux` for running commands on more than one server at a time
+- `systemd`/`journalctl` for debugging clusters and changing systemd unit files etc.
 
+## Resources
 ### Links and Tutorials
+- https://kubernetes.io/docs/
+- https://kubernetes.io/docs/tasks/
 - https://github.com/kelseyhightower/kubernetes-the-hard-way
 
 ### Udemy
