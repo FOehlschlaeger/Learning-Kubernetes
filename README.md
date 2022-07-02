@@ -3,7 +3,14 @@ This project aims to learn Kubernetes to prepare for the [CKA certification](htt
 
 
 ## Udemy
+### CKA
 The Udemy course [Certified Kubernetes Administrator with practice tests](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/) is also used in terms of understanding Kubernetes and preparation for the certification.
+
+### CKAD
+Topic in CKAD
+- multi-container pods design patterns
+  - ambassador pattern
+  - adapter pattern
 
 ---
 ## Cluster Architecture Setup
