@@ -9,7 +9,7 @@
 
 ## Upgrading Cluster
 
-https://v1-20.docs.kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
+Example upgrading process to version 1.20.0: https://v1-20.docs.kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
 
 ### Upgrade master nodes / controlplane
 #### Upgrade `kubeadm`
@@ -70,14 +70,14 @@ kubectl drain node01 --ignore-daemonsets
 ssh root@<WORKER-IP>
 ```
 
-#### Upgrade `kubeadm`
+#### Upgrade `kubeadm` on worker node
 ```
 apt-mark unhold kubeadm && \
 apt-get update && apt-get install -y kubeadm=1.20.0-00 && \
 apt-mark hold kubeadm
 ```
 
-#### Upgrade worker node
+#### Upgrade configuuration on worker node
 ```
 sudo kubeadm upgrade node01
 ```
