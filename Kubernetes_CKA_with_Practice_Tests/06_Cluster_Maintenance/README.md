@@ -145,6 +145,11 @@ kubectl get all --all-namespaces -o yaml > all-deploy-services.yaml
 ```
 ETCDCTL_API=3 etcdctl snapshot save snapshot.db
 ```
+##### Example:
+```
+ETCDCTL_API=3 etcdctl snapshot save /opt/snapshot-pre-boot.db --cert=/etc/kubernetes/pki/etcd/server.crt --cacert=/etc/kubernetes/pki/etcd/ca.crt --key=/etc/kubernetes/pki/etcd/server.key --endpoints=127.0.0.1:2379
+```
+
 - view status of backup
 ```
 ETCDCTL_API=3 etcdctl snapshot status snapshot.db
