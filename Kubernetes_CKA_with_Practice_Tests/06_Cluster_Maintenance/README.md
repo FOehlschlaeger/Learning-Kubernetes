@@ -126,3 +126,53 @@ kubectl get all --all-namespaces -o yaml > all-deploy-services.yaml
 ### Backup Tools
 - ARK / [Velero](https://velero.io/docs/v1.9/)
 
+### ECTD Cluster
+- in `etcd` the state of cluster is stored (the status information shown in `kubectl get` command)
+- usually etcd database hosted on master nodes
+- data storage location defined during etcd configuration, for example by `--data-dir=/var/lib/etcd`
+
+**Important Note**
+- `etcdctl` is command line client for etcd
+- make sure to set correct API version: `ETCDCTL_API=3`
+- Using `ÈTCDCTL` always define for each command 
+  - `--endpoints=https://127.0.0.1:2379`: default as ETCD is running on master node and exposed on localhost port 2379
+  - `--cert=.../etcd-server.crt`: identify secure client using this TLS certificate file
+  - `--key=.../etcd-server.key`: identify secure client using this TLS key file
+  - `--cacert=.../ca.crt`: verify certificates of TLS-enabled secure servers using CA bundle
+
+#### Create Backup
+- taking a snapshot of etcd database in current directory
+```
+ETCDCTL_API=3 etcdctl snapshot save snapshot.db
+```
+- view status of backup
+```
+ETCDCTL_API=3 etcdctl snapshot status snapshot.db
+```
+
+#### Restoring from ETCD Backup
+- stop kube-apiserver service
+```
+service kube-apiserver stop
+```
+- restore from snapshot (from backup a new cluster is created)
+```
+ETCDTL_API=3 etcdctl snapshot restore snapshot.db --data-dir=/var/lib/etcd-from-backup
+```
+- initilization of a new cluster configuration from backup file
+- new members of etcd are configured as new members of new cluster to prevent joining of a new member to an existing cluster
+- `--data-dir` defines the new data location to store etcd data of new cluster
+- use new data directory in etcd configuration file
+- reload the service daemon
+```
+systemctl daemon-reload
+```
+- restart etcd service
+```
+service etcd restart
+```
+- start kube-apiserver service
+```
+service kube-apiserver start
+```
+
