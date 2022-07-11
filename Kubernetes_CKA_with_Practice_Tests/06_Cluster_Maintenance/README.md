@@ -1,12 +1,12 @@
 # Cluster Maintenance
 
 ## References
-
 ### Kubernetes Software Versions
 - https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 - https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md
 - https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api_changes.md
 
+---
 ## Upgrading Cluster
 
 Example upgrading process to version 1.20.0: https://v1-20.docs.kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/
@@ -111,3 +111,18 @@ kubectl uncordon node01
 ```
 kubectl get nodes
 ```
+
+---
+## Cluster Backup and Restore
+
+### Best Practice
+- Use a version control system such as Git/GitHub to store configuration files for Kubernetes deployments and resources
+
+### Backup all configurations running in cluster
+```
+kubectl get all --all-namespaces -o yaml > all-deploy-services.yaml
+```
+
+### Backup Tools
+- ARK / [Velero](https://velero.io/docs/v1.9/)
+
