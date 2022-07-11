@@ -164,10 +164,14 @@ service kube-apiserver stop
 ```
 ETCDTL_API=3 etcdctl snapshot restore snapshot.db --data-dir=/var/lib/etcd-from-backup
 ```
+##### Example
+```
+ETCDCTL_API=3 etcdctl snapshot restore /opt/snapshot-pre-boot.db --cert=/etc/kubernetes/pki/etcd/server.crt --cacert=/etc/kubernetes/pki/etcd/ca.crt --key=/etc/kubernetes/pki/etcd/server.key --endpoints=127.0.0.1:2379 --data-dir=/var/lib/etcd.db
+```
 - initilization of a new cluster configuration from backup file
 - new members of etcd are configured as new members of new cluster to prevent joining of a new member to an existing cluster
 - `--data-dir` defines the new data location to store etcd data of new cluster
-- use new data directory in etcd configuration file
+- use new data directory at `--data-dir` entry in etcd configuration file, usually at `/etc/kubernetes/manifests/etcd.yaml`, but also update `volumes` and `volumeMounts` in etcd config file
 - reload the service daemon
 ```
 systemctl daemon-reload
