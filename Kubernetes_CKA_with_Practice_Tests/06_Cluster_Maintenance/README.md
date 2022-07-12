@@ -6,6 +6,11 @@
 - https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md
 - https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api_changes.md
 
+### Backup and Restore
+- https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster
+- https://github.com/etcd-io/website/blob/main/content/en/docs/v3.5/op-guide/recovery.md
+- https://www.youtube.com/watch?v=qRPNuT080Hk
+
 ---
 ## Upgrading Cluster
 
