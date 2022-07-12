@@ -170,7 +170,7 @@ ETCDCTL_API=3 etcdctl snapshot restore --data-dir=/var/lib/etcd.db /opt/snapshot
 ```
 - initilization of a new cluster configuration from backup file
 - new members of etcd are configured as new members of new cluster to prevent joining of a new member to an existing cluster
-- `--data-dir` defines the new data location to store etcd data of new cluster
+- `--data-dir` defines the new data location to store etcd data of new cluster inside `etcd` pod
 - use new data directory at `volumes.hostPath.path` entry in etcd configuration file, usually at `/etc/kubernetes/manifests/etcd.yaml` (`hostPath` refers to local path, `mountPath` and `--data-dir` are locations in `etcd` pod, so `volumeMounts.mountPath` for etcd-data should match `--data-dir` entry)
 - reload the service daemon
 ```
