@@ -21,6 +21,8 @@ from [Udemy course](https://www.udemy.com/course/certified-kubernetes-administra
 ---
 ## Certification Tip
 - use `kubectl run` command to generate yaml manifests
+- always verify the results and commands! 
+  - for example: task to create a pod with a specific image, then create pod and verify using `kubectl describe pod` to check
 
 ### Examples
 #### Pod
