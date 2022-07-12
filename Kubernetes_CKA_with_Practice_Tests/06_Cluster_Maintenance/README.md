@@ -160,18 +160,18 @@ ETCDCTL_API=3 etcdctl snapshot status snapshot.db
 ```
 service kube-apiserver stop
 ```
-- restore from snapshot (from backup a new cluster is created)
+- restore from snapshot (from backup a new cluster is created, `--cacert`, `--cert`, `--key`, `--endpoints` are not necessary due to no interaction with apiserver when restoring from backup file)
 ```
 ETCDTL_API=3 etcdctl snapshot restore snapshot.db --data-dir=/var/lib/etcd-from-backup
 ```
 ##### Example
 ```
-ETCDCTL_API=3 etcdctl snapshot restore /opt/snapshot-pre-boot.db --cert=/etc/kubernetes/pki/etcd/server.crt --cacert=/etc/kubernetes/pki/etcd/ca.crt --key=/etc/kubernetes/pki/etcd/server.key --endpoints=127.0.0.1:2379 --data-dir=/var/lib/etcd.db
+ETCDCTL_API=3 etcdctl snapshot restore --data-dir=/var/lib/etcd.db /opt/snapshot-pre-boot.db
 ```
 - initilization of a new cluster configuration from backup file
 - new members of etcd are configured as new members of new cluster to prevent joining of a new member to an existing cluster
 - `--data-dir` defines the new data location to store etcd data of new cluster
-- use new data directory at `--data-dir` entry in etcd configuration file, usually at `/etc/kubernetes/manifests/etcd.yaml`, but also update `volumes` and `volumeMounts` in etcd config file
+- use new data directory at `volumes.hostPath.path` entry in etcd configuration file (`hostPath` refers to local path, `mountPath` and `--data-dir` are locations in `etcd` pod), usually at `/etc/kubernetes/manifests/etcd.yaml`
 - reload the service daemon
 ```
 systemctl daemon-reload
