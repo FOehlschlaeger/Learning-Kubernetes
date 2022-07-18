@@ -66,7 +66,45 @@
   - kube-controller-manager
   - kube-proxy
 - at least one certificate authority (CA) must exist for cluster with `ca.crt` and `ca.key`
-- 
+
+### Certifcate Generation using OpenSSL
+- Certificate Authority
+  - `ca.key`: generate keys: `openssl genrsa -out ca.key 2048`
+  - `ca.csr`: create certificate signing request: `openssl req -new -key ca.key subj "/CN=KUBERNETES-CA" -out ca.csr` with component `/CN=` for which the certificate will be created
+  - `ca.crt`: sign certificate: `openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt`
+- Admin user
+  - `admin.key`: generate keys: `openssl genrsa -out admin.key 2048`
+  - `admin.csr`: create certificate signing request: `openssl req -new -key admin.key subj "/CN=kube-admin/O=system:masters" -out admin.csr` with component `/O=` for user groups
+  - `admin.crt`: sign certificate: `openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt` to sign certificate with CA key pair for valid certificate within cluster
+- same procedure for scheduler, controller-manager, kube-proxy
+- other users besides `system:` clients can be assigned other user groups without admin privileges
+- specify `--key`, `--cacert`, `--cert` into `kube-config.yaml`
+```yaml
+apiVersion: v1
+kind: Config
+clusters:
+- cluster:
+  name: kubernetes
+    certificate-authority: ca.crt
+    server: https://kube-apiserver:6443
+users:
+- name: kubernetes-admin
+  user:
+    client-certificate: admin.crt
+    client-key: admin.key
+```
+- etcd server:
+  - for HA define `--peer-...` certificates
+- kube-apiserver:
+  - kube-apiserver with several names to be addressed such as: `kubernetes`, `kubernetes.default`, `kubernetes.default.svc`, `kubernetes.defaul.svc.cluster.local`, IP addresses directly
+  - `openssl genrsa -out apiserver.key 2048`
+  - `openssl req -new -key apiserver.key subj "/CN=kube-apiserver" -out apiserver.csr -config openssl.conf` with `openssl.conf` containing DNS `subjectAltName`
+  - `openssl x509 -req -in apiserver.csr -CA ca.crt -CAkey ca.key -out apiserver.crt`
+- kubelet server:
+  - kubelet certificate and key on each node in cluster named after nodes
+- kubelet client (talking to kube-apiserver):
+  - each node with certifcate and CSR with node name (such that kube-apiserver knows which node communicates)
+  - `system:node:node01` of group `SYSTEM:NOES`
 
 ## Authorization
 
