@@ -106,5 +106,21 @@ users:
   - each node with certifcate and CSR with node name (such that kube-apiserver knows which node communicates)
   - `system:node:node01` of group `SYSTEM:NOES`
 
+### Checking Certificates Health
+- cluster setup using `kubeadm`
+  - xlsx file sheet: [kubernetes-certs-checker.xlsx](kubernetes-certs-checker.xlsx)
+  - `/ect/kubernetes/manifests/kube-apiserver.yaml` to check all certificates of all components:
+    - `--client-ca-file`
+    - `--etcd-cafile`
+    - `--etcd-certfile`
+    - `--etcd-keyfile`
+    - `--kubelet-client-certificate`
+    - `--kubelet-client-key`
+    - `--tls-cert-file`
+    - `--tls-private-key-file`
+  - details about certificate: `openssl x509 -in /etc/kubernetes/pki/apiserver.crt -text -noout` such as `Issuer`, `Validity.Not After`, `Subject`, `x509v3 Subject Alternative Name`
+  - `kubectl logs etcd-master` to check for setup components as pods via `kubeadm` setup
+  - without access of pods, use docker or container runtime engine and access logs of pods: `docker logs <container-ID>`
+
 ## Authorization
 
