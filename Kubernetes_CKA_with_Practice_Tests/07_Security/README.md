@@ -49,8 +49,24 @@
   - issue and signature verify legitimation of certificates
   - self-signed certificate (not-save)
   - certificate authority: organization for signing and validation of certificates after sending a certificate signing request (CSR)
+- public key files ending with `.crt` or `.pem`
+- private key files ending with `.key` or `-key.pem` (substring `key` in filename)
 
 ## TLS in Kubernetes
+- inter-node communication needs to be encrpyted
+- user-node communication must enable TLS encryption
+- server certificates for servers and client certificates for clients and users
+- server certificates
+  - kube-api server
+  - etcd server
+  - kubelet server
+- client certificates
+  - admin user with admin.crt and admin.key for `kubectl `REST API requests to kube-apiserver
+  - kube scheduler
+  - kube-controller-manager
+  - kube-proxy
+- at least one certificate authority (CA) must exist for cluster with `ca.crt` and `ca.key`
 - 
 
 ## Authorization
+
