@@ -122,7 +122,7 @@ users:
   - `kubectl logs etcd-master` to check for setup components as pods via `kubeadm` setup
   - without access of pods, use docker or container runtime engine and access logs of pods: `docker logs <container-ID>`
 
-## (Certificate Signing Requests)[https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/]
+## [Certificate Signing Requests](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/)
 - new user creates key pair and signing request file such as `user.csr`
 - create a new certificate signing request object in Kubernetes via `kubectl create -f csr.yaml`
 - encode the content of the csr file: `cat user.csr | base64 | tr -d "\n"`
@@ -143,6 +143,45 @@ spec:
 - denying a csr: `kubectl certificate deny user-csr`
   - checking values in `spec.groups` to decide about denying or approving
 - checkout csr objects: `kubectl get csr <csr-name> -o yaml`
+
+## KubeConfig File
+- stores information about `--server`, `--client-key`, `--client-certificate`, `--certificate-authority` to pass to each `kubectl` command
+  - by default: `--kubeconfig config`
+  - location: `$HOME/.kube/config`
+- content sections:
+  - clusters: clusters for different purposes such as development, production
+  - contexts: connect user to cluster, for example `admin@production`
+  - users: several users with different access and privileges on different clusters such as admin, developer etc.
+- no new objects need to be created, only already existing objects can be called
+```yaml
+apiVersion: v1
+kind: Config
+current-context: my-kube-admin@my-kube-playground # add this to define default context of config file
+
+clusters: # array to add several clusters
+- name: my-kube-playground
+  cluster:
+    #certificate-authority: ca.crt # certificate of certificate authority
+    certificate-authority-data: <base64-encoded-output-of-ca.crt-file> # use cat ca.crt | base64
+    server: https://my-kube-playground:6443
+    
+contexts: # array to add several contexts
+- name: my-kube-admin@my-kube-playground
+  context:
+    cluster: my-kube-playground
+    user: my-kube-admin
+    namespace: finance
+
+users: # array to add several users
+- name: my-kube-admin
+  user: 
+    client-certificate: admin.crt
+    client-key: admin.key
+```
+- `kubectl config view`
+- to change current context: `kubectl config use-context prod-user@production`
+- better to input base64 encoded content of certificate files using `cat <file> | base64`
+  - for decoding: `echo -n <string-to-decode> | base64 --decode`
 
 ## Authorization
 
