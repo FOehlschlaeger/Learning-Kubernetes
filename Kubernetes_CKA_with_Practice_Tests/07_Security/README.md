@@ -185,3 +185,40 @@ users: # array to add several users
 
 ## Authorization
 
+### Roles and RoleBindings
+- example for `Role`
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer
+  namespace: blue
+rules:
+- apiGroups:
+  - apps
+  resources:
+  - pods
+  - deployments
+  verbs:
+  - list
+  - create
+  - delete
+  - get
+```
+- example for `RoleBinding`
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: dev-user-binding
+  namespace: blue
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: developer
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: dev-user
+```
+
