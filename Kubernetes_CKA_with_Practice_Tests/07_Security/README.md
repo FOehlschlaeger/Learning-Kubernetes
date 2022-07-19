@@ -122,5 +122,27 @@ users:
   - `kubectl logs etcd-master` to check for setup components as pods via `kubeadm` setup
   - without access of pods, use docker or container runtime engine and access logs of pods: `docker logs <container-ID>`
 
+## (Certificate Signing Requests)[https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/]
+- new user creates key pair and signing request file such as `user.csr`
+- create a new certificate signing request object in Kubernetes via `kubectl create -f csr.yaml`
+- encode the content of the csr file: `cat user.csr | base64 | tr -d "\n"`
+```yaml
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  name: user-csr
+spec:
+  request: <output-of-base64-encoded-csr-file-of-user>
+  signerName: kubernetes.io/kube-apiserver-client
+  expirationSeconds: 86400  # one day
+  usages:
+  - client auth
+```
+- check existing csr objects: `kubectl get csr`
+- approving a csr: `kubectl certificate approve user-csr`
+- denying a csr: `kubectl certificate deny user-csr`
+  - checking values in `spec.groups` to decide about denying or approving
+- checkout csr objects: `kubectl get csr <csr-name> -o yaml`
+
 ## Authorization
 
