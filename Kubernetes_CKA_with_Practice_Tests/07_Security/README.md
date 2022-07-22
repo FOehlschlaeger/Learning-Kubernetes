@@ -222,3 +222,26 @@ subjects:
   name: dev-user
 ```
 
+## Image Security
+- calling `image: nginx` in pod/deployment definition, is actually calling: `docker.io/library/nginx`
+- use private image registry with credentials
+- create secret with credentials
+- **important note: `docker-registry` is a build-in secret type**
+```commandline
+kubectl create secret docker-registry regcred \
+  --docker-server= private-registry.io \
+  --docker-username= registry-user \
+  --docker-password= registry-password \
+  --docker-email= registry-user@org.com
+```
+- use credentials in pod/deploment definition:
+```yaml
+...
+spec:
+  containers:
+  - name nginx
+    image: private-registry.io/apps/internal-apps/nginx
+  imagePullSecrets:
+  - name: regcred
+...
+```
