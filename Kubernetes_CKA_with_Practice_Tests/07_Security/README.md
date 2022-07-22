@@ -245,3 +245,20 @@ spec:
   - name: regcred
 ...
 ```
+
+## [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+- a security context defines privilege and access control settings for a Pod or Container
+- add `securityContext` in pod or container definition
+- `Capabilities` are only available in `securityContext` section in container definition
+```yaml
+...
+spec:
+  containers:
+  - name: sec-ctx-4
+    image: gcr.io/google-samples/node-hello:1.0
+    securityContext:
+      runAsUser: 1000 #root
+      capabilities:
+        add: ["NET_ADMIN", "SYS_TIME"]
+...
+```
