@@ -262,3 +262,64 @@ spec:
         add: ["NET_ADMIN", "SYS_TIME"]
 ...
 ```
+
+## Network Policies
+- define Network Policies to restrict/enable/disable the default "all allow" Kubernetes communication between all deployed pods
+- Network Policies are objects in Kubernetes namespace
+- rules to avoid communication between specific microservices
+- only allows traffic for configured ports
+- link Network Policy to one or more pods via `Labels` and `Selectors`
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-policy
+spec:
+  podSelector:
+    matchLabels:
+      role: db
+  policyTypes:
+  - Ingress
+  ingress:
+  - from: 
+    # selector rules and ipBlock are OR correlated
+    # selector rules within array are AND correlated
+    # both pod and namespae label must match
+    - podSelector: # allow pods with this label
+        matchLabels:
+          name: api-pod
+      namespaceSelector: # namespace must be labeled beforehand
+        matchLabels:
+          name: prod
+    - ipBlock: # allow specific IP
+        cidr: 192.168.5.10/32
+    ports:
+    - protocol: TCP
+      port: 3306
+```
+- in this example (difference in `- namespaceSelector`) there are three rules which are OR related, meaning only one of them needs to match:
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-policy
+spec:
+  podSelector:
+    matchLabels:
+      role: db
+  policyTypes:
+  - Ingress
+  ingress:
+  - from: 
+    - podSelector: # allow pods with this label
+        matchLabels:
+          name: api-pod
+    - namespaceSelector: # namespace must be labeled beforehand
+        matchLabels:
+          name: prod
+    - ipBlock: # allow specific IP
+        cidr: 192.168.5.10/32
+    ports:
+    - protocol: TCP
+      port: 3306
+```
