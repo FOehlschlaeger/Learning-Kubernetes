@@ -323,3 +323,33 @@ spec:
     - protocol: TCP
       port: 3306
 ```
+- example with `ingress` and `egress`, to push a backup to a bakup server with IP `192.168.5.10`
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: db-policy
+spec:
+  podSelector:
+    matchLabels:
+      role: db
+  policyTypes:
+  - Ingress
+  - Egress # adding Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          name: api-pod
+    ports:
+    - protocol: TCP
+      port: 3306
+  egress: # new egress section
+  - to: 
+    # any rules can be used such as `podSelector`, `namespaceSelector` or `ipBlock`
+    - ipBlock: # allow specific IP
+        cidr: 192.168.5.10/32
+    ports:
+    - protocol: TCP
+      port: 80
+```
