@@ -353,3 +353,47 @@ spec:
     - protocol: TCP
       port: 80
 ```
+- another example calling `selector` labels of services such as `name=mysql` of service `db-service` via `kubectl get svc db-service`
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: internal-policy
+spec:
+  podSelector:
+    matchLabels:
+      name: internal
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector: 
+            matchLabels:
+              name: mysql
+      ports:
+        - protocol: TCP
+          port: 3306
+    - from: 
+        - podSelector:
+            matchLabels:
+              name: payroll
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - podSelector:
+            matchLabels: 
+              name: mysql
+      ports:
+        - protocol: TCP
+          port: 3306
+    - to:
+        - podSelector:
+            matchLabels:
+              name: payroll 
+      ports:
+        - protocol: TCP
+          port: 8080
+```
