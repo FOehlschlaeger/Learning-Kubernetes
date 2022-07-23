@@ -193,7 +193,6 @@ spec:
               apiVersion: v1
               fieldPath: metadata.namespace
             path: namespace
----
 ```
 
 ## [StatefulSets](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/)
@@ -249,3 +248,43 @@ spec:
 ```
 - the `StorageClass` still creates a PV but automatically, not by administrator before creating the PVC
 - **parameters of provisioners are provisioner-dependent**
+- example
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: local-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+  storageClassName: local-storage
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx:alpine
+    name: pod
+    volumeMounts:
+    - name: pv-vol
+      mountPath: /var/www/html
+  volumes:
+  - name: pv-vol
+    persistentVolumeClaim: 
+      claimName: local-pvc
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: delayed-volume-sc
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+```
+
