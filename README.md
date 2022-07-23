@@ -15,6 +15,7 @@ This project aims to learn Kubernetes to prepare for the [CKA certification](htt
 - https://kubernetes.io/docs/
 - https://kubernetes.io/docs/tasks/
 - https://github.com/kelseyhightower/kubernetes-the-hard-way
+- https://github.com/cncf/curriculum
 
 ### Udemy
 #### CKA
@@ -29,6 +30,8 @@ Topic in CKAD
   - self-healing applications through ReplicaSets and Replication Controllers
   - Replication Controller: ensures that pod is recreates automatically and ensures that enough replicas are running at all times
   - Liveness and Readiness Probes
+- Storage
+  - StatefulSets
 
 ---
 ## Cluster Architecture Setup
