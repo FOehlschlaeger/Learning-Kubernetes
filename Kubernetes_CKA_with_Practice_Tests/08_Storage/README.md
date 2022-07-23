@@ -83,6 +83,7 @@ spec:
   - by default: `persistentVolumeReclaimPolicy: Retain`, meaning the PV will remain until manually deletion by administrator, not available for reuse by other PVCs
   - `persistentVolumeReclaimPolicy: Delete`: PV deleted together with deleted PVC
   - `persistentVolumeReclaimPolicy: Recycle`: data in volume will be scrubbed to be reused again (**deprecated, use [dynamic provisioning](https://kubernetes.io/docs/concepts/storage/dynamic-provisioning/) instead**)
+- if PVC is deleted which is still in use by a pod, the PVC will not be deleted but in state `Terminating`, just when deleting the pod using the PVC, will terminate the PVC at the end
 - using a PVC in a pod definition (or ReplicaSets or Deployments by adding this to the pod template section):
 ```yaml
     apiVersion: v1
@@ -102,3 +103,95 @@ spec:
             claimName: myclaim
 ```
 
+## Example
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-log
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes: 
+  - ReadWriteMany
+  hostPath:
+    path: /pv/log
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: claim-log-1
+spec:
+  accessModes: 
+  - ReadWriteMany
+  resources: 
+    requests:
+      storage: 50Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webapp
+  namespace: default
+spec:
+  containers:
+  - env:
+    - name: LOG_HANDLERS
+      value: file
+    image: kodekloud/event-simulator
+    imagePullPolicy: Always
+    name: event-simulator
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-7vb7k
+      readOnly: true
+    - mountPath: /log
+      name: pv-1
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: controlplane
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: pv-1
+    persistentVolumeClaim:
+      claimName: claim-log-1
+  - name: kube-api-access-7vb7k
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+---
+```
