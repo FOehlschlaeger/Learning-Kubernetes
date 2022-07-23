@@ -1,6 +1,7 @@
 # Storage
 
 ## References
+- https://kubernetes.io/docs/concepts/storage/persistent-volumes/#claims-as-volumes
 
 ---
 ## Volumes and Mounts
@@ -82,3 +83,22 @@ spec:
   - by default: `persistentVolumeReclaimPolicy: Retain`, meaning the PV will remain until manually deletion by administrator, not available for reuse by other PVCs
   - `persistentVolumeReclaimPolicy: Delete`: PV deleted together with deleted PVC
   - `persistentVolumeReclaimPolicy: Recycle`: data in volume will be scrubbed to be reused again (**deprecated, use [dynamic provisioning](https://kubernetes.io/docs/concepts/storage/dynamic-provisioning/) instead**)
+- using a PVC in a pod definition (or ReplicaSets or Deployments by adding this to the pod template section):
+```yaml
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: mypod
+    spec:
+      containers:
+        - name: myfrontend
+          image: nginx
+          volumeMounts:
+          - mountPath: "/var/www/html"
+            name: mypd
+      volumes:
+        - name: mypd
+          persistentVolumeClaim:
+            claimName: myclaim
+```
+
