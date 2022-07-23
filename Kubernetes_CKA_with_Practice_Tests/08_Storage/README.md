@@ -204,5 +204,48 @@ spec:
 - If you want to use storage volumes to provide persistence for your workload, you can use a StatefulSet as part of the solution. Although individual Pods in a StatefulSet are susceptible to failure, the persistent Pod identifiers make it easier to match existing volumes to the new Pods that replace any that have failed.
 
 ## Storage Classes
-- 
-
+- dynamic provisioning of storage needed by applications
+- storage needed by applications is provided automatically at an exernal provider such as AWS, GCE, etc.
+```yaml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: google-storage
+provisioner: kubernetes.io/gce-pd
+parameters: # additional parameters to pass to provisioner such as type of storage etc.
+  type: pd-standard
+  replication-type: None
+```
+- using a `StorageClass` a `PersistentVolume` is not needed, since the volume is created automatically based on the `StorageClass`
+- binding a `StorageClass` object to a PVC
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec: 
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: google-storage
+  resources:
+    requests:
+      storage: 500Mi
+```
+- calling the PVC in pod definition section
+```yaml
+...
+spec:
+  containers:
+  - image: alpine
+    name: alpine
+    ...
+    volumeMounts:
+    - mountPath: /opt
+      name: data-volume
+  volumes:
+  - name: data-volume
+    persistentVolumeClaim:
+      claimName: myclaim
+```
+- the `StorageClass` still creates a PV but automatically, not by administrator before creating the PVC
+- **parameters of provisioners are provisioner-dependent**
