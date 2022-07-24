@@ -1,7 +1,8 @@
 # Networking
 
 ## Resources
-- 
+- https://github.com/kubernetes/dns/blob/master/docs/specification.md
+- https://coredns.io/plugins/kubernetes/
 
 ---
 ## Switching and Routing
@@ -82,6 +83,35 @@ search    mycompany.com  prod.mycompany.com
   - searches DNS server, not the local `/etc/hosts`
 - `dig www.google.com`
   - shows more details
+
+### CoreDNS
+- configuration of a host as DNS server
+- download and install CoreDNS
+```
+wget https://github.com/coredns/coredns/releases/download/1.4.0/coredns_1.4.0_linux_amd64.tgz
+```
+- extract the binary
+```
+tar -xzvf coredns_1.4.0_linux_amd64.tgz
+```
+- run the CoreDNS binary
+```
+./coredns
+```
+- default port is `53`
+- put entries for DNS in local servers `/etc/hosts` file
+- configuration of CoreDNS to use the `/etc/hosts` file
+  - CoreDNS loads configuration from file named `CoreFile`
+```
+cat > Corefile
+. {
+    hosts /etc/hosts
+}
+```
+- restart CoreDNS binary
+```
+./coredns
+```
 
 
 ## Network Namespaces
