@@ -48,6 +48,40 @@ ip route add default via 192.168.2.1 # add route to unknown servers to connect t
 
 
 ## DNS and CoreDNS
+- resolving domain names to corresponding IP addresses via single entries in `/etc/hosts` file
+  - `192.168.1.10   db`
+- centralization due to increasing number of servers and addresses to resolve via DNS server
+- host has DNS resolution file at `/etc/resolv.conf`
+  - specification of address of DNS: `nameserver   192.168.1.100`
+- for host individual entries to resolve create entry in local host `/etc/hosts` file
+- by default: local host file is preferred before dns
+  - `/etc/nsswitch.conf`
+- add entr to DNS to forward unknown requests (`www.github.com`) to another DNS to resolve other addresses of the internet, such as `8.8.8.8`
+
+### Domain Names
+- `www.google.com`
+  - `.`: Root
+  - `.com`: Top Level Domain
+  - `google`: 
+  - `www`: Subdomain (i.e.: `maps`, `apps`, etc.)
+- chaining of several DNS to reach the final IP address
+  - Root DNS
+  - .com DNS
+  - google DNS
+  - forward to server referring to subdomain and responding with IP address of server
+
+#### Resolving addresses for internal use
+- add entry to `/etc/resolv.conf` to resolve `web` instead of `web.mycompany.com`
+```
+search    mycompany.com  prod.mycompany.com
+```
+- subdomain is resolved using `search` entry
+
+### Testing DNS lookup
+- `nslookup www.google.com` 
+  - searches DNS server, not the local `/etc/hosts`
+- `dig www.google.com`
+  - shows more details
 
 
 ## Network Namespaces
