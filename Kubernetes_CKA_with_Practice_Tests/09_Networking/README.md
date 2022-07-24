@@ -5,7 +5,6 @@
 
 ---
 ## Switching and Routing
-## Switching and Routing
 ### Switching
 - switch connects machines (PCs, VMs, etc.) to build a network
 - each machine or host needs interface such as `eth0` to connect to switch
