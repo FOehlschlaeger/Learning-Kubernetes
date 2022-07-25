@@ -115,6 +115,91 @@ cat > Corefile
 
 
 ## Network Namespaces
+- separating containers into network namespaces as defined, restricted areas
+- admin on host has access to all namespaces, all processes within a separated namespace run assuming the namespace is the host system
+- create a new network namespace
+```
+ip netns add <network-namespace-name>
+```
+- list all network namespaces
+```
+ip netns
+```
+- list interfaces in specific namespace
+```
+ip netns exec <namespace-name> ip link
+ip -n <namespace-name> link
+```
+- same for ARP tables and routing table
+```
+ip netns exec <namespace-name> arp
+ip netns exec <namespace-name> route
+```
+- connectivity between two namespaces
+  - create virtual interfaces
+  ```
+  ip link add veth-<namespace1> type veth peer name veth-<namespace2>
+  ```
+  - link virtual interfaces to namespaces
+  ```
+  ip link set veth-<namespace1> netns <namespace1
+  ```
+  - add IP addresses to interfaces
+  ```
+  ip -n <namespace1> addr add 192.168.15.1 dev veth-<namespace1>
+  ```
+  - bring up the interface for each device in respective namespace
+  ```
+  ip -n <namespace1> link set veth-<namespace1> up
+  ```
+  - remove link from both namespaces
+  ```
+  ip -n <namespace1> link del veth-<namespace1>
+  ```
+- virtual switch on host for virtual network connecting several namespaces and connect namespaces to virtual switch
+  - Linux Bridge for creating a virtual switch
+  ```
+  ip link add v-net-0 type bridge # name: v-net-0
+  ```
+  - virtual switch is just another interface from host perspective
+  - turn up virtual switch
+  ```
+  ip link set dev v-net-0 up
+  ```
+  - create connection between interfaces namespaces to bridge
+  ```
+  ip link add veth-<namespace1> type veth peer name veth-red-br # name of virtual interface of bridge
+  ```
+  - connect namespace and bridge (in namespace red)
+  ```
+  ip link set veth-red netns red
+  ip link set veth-red-br master v-net-0
+  ```
+  - create IP addresses
+  ```
+  ip -n red addr add 192.168.15.1 dev veth-red
+  ```
+  - turn devices up
+  ```
+  ip -n red link set veth-red up
+  ```
+  - to reach namespaces from host via switch, assign switch (=interface on host) an IP address
+  ```
+  ip addr add 192.168.15.5/24 dev v-net-0
+  ```
+  - configure bridge to reach outside networks 192.168.1.0/24 by adding a gateway on host and adding NAT for response resolution of hosts IP address
+  ```
+  ip netns exec red ip route add 192.168.1.0/24 via 192.168.15.5
+  iptables -t nat -A POSTROUTE -s 192.168.15.0/24 -j MASQUERADE
+  ```
+  - adding a default gateway to host using IP of virtual interface
+  ```
+  ip netns exec red ip route add default via 192.168.15.5
+  ```
+  - IP forwarding
+  ```
+  iptables -t nat -A PREROUTING --dport 80 --to-destination 192.168.15.2:80 -j DNAT
+  ```
 
 
 ## CNI
