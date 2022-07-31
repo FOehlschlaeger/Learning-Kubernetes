@@ -231,6 +231,17 @@ cat /etc/cni/net.d/<filename-of-network-plugin>
  kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=10.50.0.0/16"
 ```
 
+### IP Adress Management
+- CNI plugin is responsible for managing IP adresses of pods and bridge networks on nodes
+- `ipam`-section in CNI configuration file
+```
+cat /etc/cni/net.d/net-script.conf
+```
+- `ipam.type: "host-local"` for local files on each node with IP information 
+- `ipam.type: "DHCP"`
+- Weavenet default range: `10.32.0.0/12` equals IP adresses from `10.32.0.1` to `10.47.255.254` results in 1.048.574 IP adresses
+- Weavenet distributes these IP addresses over existing nodes in cluster
+
 
 ## Pod Networking
 
