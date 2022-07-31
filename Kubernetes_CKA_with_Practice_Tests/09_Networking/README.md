@@ -202,7 +202,26 @@ ip netns exec <namespace-name> route
   ```
 
 
-## CNI
+## CNI - Container Network Interface
+### CNI Plugin
+- important default locations on controlplane node (access as root)
+```
+# check for running CNI
+ps -aux | grep kubelet | grep --network-plugin
+```
+```
+# location of available CNI plugins
+ls /opt/bin/cni
+```
+```
+# installed CNI plugin
+ls /etc/cni/net.d/
+```
+```
+# check for binary executable in network file (type parameter)
+# file will be run by kubelet after a container and namespace are created
+cat /etc/cni/net.d/<filename-of-network-plugin>
+```
 
 
 ## Pod Networking
