@@ -274,12 +274,44 @@ kubectl exec busybox -- ip route
 kubectl exec busybox -- route -n
 ```
 
-
-## Pod Networking
-
-
 ## Service Networking
-
+- services are created cluster-wide and are not bound to nodes
+- IP range of pods and of services must not overlap, since no IP should be assigned to a pod and to a service
+- check the service IP range
+```
+# kube-api-server --service-cluster-ip-range ipNet (default: 10.0.0.0/24)
+ps -aux | grep kube-api-server
+# check output for --service-cluster-ip-range=...
+```
+- rules created by kube-proxy in IPtables (basically forwarding from IP of service to IP of pod)
+```
+iptables -L -t nat | grep <service-name>
+```
+- in kube-proxy logs (actual location depends on installation, and check verbosity level)
+```
+cat /var/logs/kube-proxy.log
+```
+- identify IP range of nodes
+```
+ip a | grep eth0
+# or
+apt install ipcalc
+ip calc -b <ip-of-interface-eth0>
+```
+- identify IP range of pods
+```
+kubectl -n kube-system logs <weavenet-pod> <weave-container> # check for ipalloc-range
+```
+- identify IP range of services
+```
+cat /etc/kubernetes/manifests/kube-apiserver.yaml | grep cluster-ip-range
+# or
+ps -aux | grep kube-api | grep range
+```
+- identify type of proxy 
+```
+kubectl -n kube-system logs kube-proxy-msb4j
+```
 
 ## Ingress
 
