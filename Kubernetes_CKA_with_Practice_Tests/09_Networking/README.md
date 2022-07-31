@@ -242,6 +242,22 @@ cat /etc/cni/net.d/net-script.conf
 - Weavenet default range: `10.32.0.0/12` equals IP adresses from `10.32.0.1` to `10.47.255.254` results in 1.048.574 IP adresses
 - Weavenet distributes these IP addresses over existing nodes in cluster such that each node gets an almost equally portion to assign IP addresses to pods 
 
+### Networking Weavenet
+```
+# identify cni plugin used in cluster
+cat /etc/cni/net.d/<file>
+```
+```
+# identify name of bridge network/interface created by CNI plugin
+ip link
+```
+```
+# get pod IP address range configured by CNI plugin
+ip addr show weave
+# or
+kubectl -n kube-system describe ds weave-net
+```
+
 
 ## Pod Networking
 
