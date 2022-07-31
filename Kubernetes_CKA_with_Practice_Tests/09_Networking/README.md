@@ -253,6 +253,8 @@ ip link
 ```
 ```
 # get pod IP address range configured by CNI plugin
+kubectl -n kube-system logs <weave-net-pod> <weave-container-in-pod> # shows logs with ipalloc-range
+# or
 ip addr show weave
 # or
 kubectl -n kube-system describe ds weave-net
