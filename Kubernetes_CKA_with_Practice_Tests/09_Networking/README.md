@@ -223,6 +223,14 @@ ls /etc/cni/net.d/
 cat /etc/cni/net.d/<filename-of-network-plugin>
 ```
 
+### Installing Weavenet
+- installing weavenet: https://www.weave.works/docs/net/latest/kubernetes/kube-addon/#-installation
+- configure weavenet installation: https://www.weave.works/docs/net/latest/kubernetes/kube-addon/#-changing-configuration-options
+- install weavenet CNI with parameter to change the default IP range to avoid network overlapping
+```
+ kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')&env.IPALLOC_RANGE=10.50.0.0/16"
+```
+
 
 ## Pod Networking
 
