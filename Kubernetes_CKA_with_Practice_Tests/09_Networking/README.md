@@ -238,9 +238,9 @@ cat /etc/cni/net.d/<filename-of-network-plugin>
 cat /etc/cni/net.d/net-script.conf
 ```
 - `ipam.type: "host-local"` for local files on each node with IP information 
-- `ipam.type: "DHCP"`
+- dynamic allocation: DHCP
 - Weavenet default range: `10.32.0.0/12` equals IP adresses from `10.32.0.1` to `10.47.255.254` results in 1.048.574 IP adresses
-- Weavenet distributes these IP addresses over existing nodes in cluster
+- Weavenet distributes these IP addresses over existing nodes in cluster such that each node gets an almost equally portion to assign IP addresses to pods 
 
 
 ## Pod Networking
