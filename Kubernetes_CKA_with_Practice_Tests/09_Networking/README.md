@@ -259,6 +259,20 @@ ip addr show weave
 # or
 kubectl -n kube-system describe ds weave-net
 ```
+```
+# identify default gateway of pod scheduled on node node01
+kubectl run busybox --image=busybox --dry-run=client -o yaml -- sleep 1000 > busybox.yaml
+# edit yaml file to add `spec.nodeName=node01`
+nano busybox.yaml
+# create pod
+kubectl create -f busybox.yaml
+# check if running on node01
+kubectl get pod -o wide
+# exec into created pod and check routing via `ip route`
+kubectl exec busybox -- ip route
+# or 
+kubectl exec busybox -- route -n
+```
 
 
 ## Pod Networking
