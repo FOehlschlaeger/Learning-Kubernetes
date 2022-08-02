@@ -313,5 +313,36 @@ ps -aux | grep kube-api | grep range
 kubectl -n kube-system logs kube-proxy-msb4j
 ```
 
+## DNS
+- DNS is installed internally usually along with installation and setup of cluster
+- service creation leads to entry in DNS with service name and IP address of service
+- to reach a service in same namespace: 
+```
+curl http://<service-name>
+```
+- to reach a service in another namespace:
+```
+curl http://<service-name>.<namespace>.svc.cluster.local
+```
+- DNS for pods are not created by default
+- DNS entries of pods refer to pods IP address, but dots replaced by dashes: `10.244.2.5` to `10-244-2-5.<namespace>.pod.cluster.local`
+ 
+### CoreDNS
+- central DNS inside cluster with all IP addresses of existing and created pods
+- pods are referenced by the IP with dashes
+- services are referenced by their service name
+- in pods `/ect/resolv.conf` file the DNS nameserver and IP is referred, for example `nameserver  10.96.0.10`
+  - for each service there is an `search` entry: `search  default.svc.cluster.local  svc.cluster.local  cluster.local`
+- deployment of CoreDNS as pods in cluster
+  - runs binary `./Coredns`
+  - with configuration file: `/etc/coredns/Corefile`
+  - inside config file: plugins
+    - kubernetes with domain name of cluster `cluster.local`
+    - each request CoreDNS cannot solve, is forwarded to nameserver specified in CoreDNS' pods `/etc/resolv.conf` file, which is set to use the nameserver from the kubernetes node 
+  - `/etc/coredns/Corefile` is passed as `ConfigMap` to pod, to modify configuration by modifying the configmap
+- deployment of CoreDNS deploys a service `kube-dns` in `kube-system` namespace that each pod can access CoreDNS pods via `nameserver  <kube-dns-IP>`
+- to get fully name of service: `host <service-name>`
+  - for pods the fully FQDN has to be used: `host 10-244-2-5.default.pod.cluster.local`
+
 ## Ingress
 
