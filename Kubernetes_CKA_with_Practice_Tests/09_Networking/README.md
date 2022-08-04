@@ -344,7 +344,13 @@ curl http://<service-name>.<namespace>.svc.cluster.local
 - to get fully name of service: `host <service-name>`
   - for pods the fully FQDN has to be used: `host 10-244-2-5.default.pod.cluster.local`
 
-### Example
+### Examples
+- access/curl one pod from within another pod in a different namespace
+```
+kubectl -n namespace1 exec pod1 -- curl http://service2.namespace2
+# or
+kubectl -n namespace1 exec -it pod1 -- curl http://service2.namespace2
+```
 - deployment calling a service `mysql` in another namespace `payroll`, set as environment variable in pod specification in yaml deployment
 ```yaml
 ...
