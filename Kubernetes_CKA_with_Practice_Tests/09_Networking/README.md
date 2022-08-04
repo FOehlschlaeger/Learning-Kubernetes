@@ -344,5 +344,21 @@ curl http://<service-name>.<namespace>.svc.cluster.local
 - to get fully name of service: `host <service-name>`
   - for pods the fully FQDN has to be used: `host 10-244-2-5.default.pod.cluster.local`
 
+### Example
+- deployment calling a service `mysql` in another namespace `payroll`, set as environment variable in pod specification in yaml deployment
+```yaml
+...
+    spec:
+      containers:
+      - env:
+        - name: DB_Host
+          value: mysql.payroll
+        - name: DB_User
+          value: root
+        - name: DB_Password
+          value: paswrd
+...
+```
+
 ## Ingress
 
