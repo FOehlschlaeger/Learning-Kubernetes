@@ -367,4 +367,45 @@ kubectl -n namespace1 exec -it pod1 -- curl http://service2.namespace2
 ```
 
 ## Ingress
-
+- ingress controller necessary to apply ingress yaml files
+- ingress yaml files describe rules, how to route trffic to which services and ports, using which paths or hosts
+- `host` gives a URL where the corresponding services can be reached, defined by ingress rule
+- to reach services in another namespace create a new ingress for this namespace
+- [Ingress Controller can be deployed in any namespace and is, in fact, usually deployed in a namespace separate from your app services. It can out-of-the-box see Ingress rules in all namespaces in the cluster and will pick them up. The Ingress rules, however, must reside in the namespace where the app that they configure reside.](https://stackoverflow.com/questions/59844622/ingress-configuration-for-k8s-in-different-namespaces)
+- example ingress
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  generation: 1
+  name: ingress-wear-watch
+  namespace: app-space
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: wear-service
+            port:
+              number: 8080
+        path: /wear
+        pathType: Prefix
+#      - backend:
+#          service:
+#            name: video-service
+#            port:
+#              number: 8080
+#        path: /watch
+#        pathType: Prefix
+      - backend:
+           service:
+             name: video-service
+             port:
+               number: 8080
+        path: /stream
+        pathType: Prefix
+```
