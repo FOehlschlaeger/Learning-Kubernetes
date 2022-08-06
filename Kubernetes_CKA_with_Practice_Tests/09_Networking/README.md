@@ -3,6 +3,9 @@
 ## Resources
 - https://github.com/kubernetes/dns/blob/master/docs/specification.md
 - https://coredns.io/plugins/kubernetes/
+- https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-ingress-em-
+- https://kubernetes.io/docs/concepts/services-networking/ingress
+- https://kubernetes.io/docs/concepts/services-networking/ingress/#path-types
 
 ---
 ## Switching and Routing
@@ -367,7 +370,7 @@ kubectl -n namespace1 exec -it pod1 -- curl http://service2.namespace2
 ```
 
 ## Ingress
-- ingress controller necessary to apply ingress yaml files
+- ingress controller (such as nginx) necessary to apply ingress yaml files
 - ingress yaml files describe rules, how to route trffic to which services and ports, using which paths or hosts
 - `host` gives a URL where the corresponding services can be reached, defined by ingress rule
 - to reach services in another namespace create a new ingress for this namespace
@@ -408,4 +411,11 @@ spec:
                number: 8080
         path: /stream
         pathType: Prefix
+```
+- ingress creation using imperative commands
+```
+kubectl create ingress <ingress-name> --rule="host/path=service:port"
+
+# example
+kubectl create ingress ingress-test --rule="wear.my-online-store.com/wear*=wear-service:80"
 ```
