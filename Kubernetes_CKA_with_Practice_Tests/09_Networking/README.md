@@ -419,3 +419,62 @@ kubectl create ingress <ingress-name> --rule="host/path=service:port"
 # example
 kubectl create ingress ingress-test --rule="wear.my-online-store.com/wear*=wear-service:80"
 ```
+
+### Ingress Annotations
+- each implementation of an ingress controller has different options
+- NGINX ingress controller: https://kubernetes.github.io/ingress-nginx/examples/
+- annotation: [`rewrite-target`](https://kubernetes.github.io/ingress-nginx/examples/rewrite/)
+  - ingress parameter `path=/watch` is appended at URL: `http://<ingress-servive>:<ingress-port>/watch` which is redirected to service `http://<watch-service>:<port>/`
+  - but the target applications do not have that URL/path configured on them
+  - without annotation `rewrite-target: /`
+    - `http://<ingress-service>:<ingress-port>/watch` redirects to `http://<watch-service>:<port>/watch`
+    - since the individual developed and deployed applications do not expect URL ending on `/watch`, this URL would throw a `404` error
+    - thus: **rewriting the URL when passed to the application is mandatory**
+    - `metadata.annotations.nginx.ingress.kubernetes.io/rewrite-target: /`
+    - annotation rewrites the URL at `rules.http.paths.path`
+- example:
+```yaml
+    apiVersion: extensions/v1beta1
+    kind: Ingress
+    metadata:
+      name: test-ingress
+      namespace: critical-space
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+    spec:
+      rules:
+      - http:
+          paths:
+          - path: /pay
+            backend:
+              serviceName: pay-service
+              servicePort: 8282
+```
+- another example:
+  - `rewrite.bar.com/something` rewrites to `rewrite.bar.com/`
+  - `rewrite.bar.com/something/` rewrites to `rewrite.bar.com/`
+  - `rewrite.bar.com/something/new` rewrites to `rewrite.bar.com/new`
+```
+echo '
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  name: rewrite
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: rewrite.bar.com
+    http:
+      paths:
+      - path: /something(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: http-svc
+            port: 
+              number: 80
+' | kubectl create -f -
+```
