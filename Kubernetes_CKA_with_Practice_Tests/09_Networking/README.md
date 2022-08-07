@@ -480,6 +480,7 @@ spec:
 ```
 
 ### Lab2: setup an NGINX ingress controller
+![alt text](Ingress-Lab2-IngressComponents.PNG)
 - create namespace for ingress resources
 - create a configmap `nginx-configuration` in ingress-namespace (does not need data)
 - create a service account `ingress-serviceaccount` in ingress-namespace (does not need any specification)
