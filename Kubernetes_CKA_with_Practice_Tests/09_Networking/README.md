@@ -685,8 +685,8 @@ metadata:
   name: app-ingress
   namespace: app-space
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /     # to avoid ingress paths in URLs for application
+    nginx.ingress.kubernetes.io/ssl-redirect: "false" # to prevent SSL-redirect
 spec:
   rules:
   - http:
