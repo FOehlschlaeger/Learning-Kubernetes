@@ -478,3 +478,233 @@ spec:
               number: 80
 ' | kubectl create -f -
 ```
+
+### Lab2: setup an NGINX ingress controller
+- create namespace for ingress resources
+- create a configmap `nginx-configuration` in ingress-namespace (does not need data)
+- create a service account `ingress-serviceaccount` in ingress-namespace (does not need any specification)
+- create roles and rolebindings 
+  - role `ingress-role` and its rolebinding `ingress-role-binding`, bound to serviceaccount
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  name: ingress-role
+  namespace: ingress-space
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - pods
+  - secrets
+  - namespaces
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resourceNames:
+  - ingress-controller-leader-nginx
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  name: ingress-role-binding
+  namespace: ingress-space
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: ingress-role
+subjects:
+- kind: ServiceAccount
+  name: ingress-serviceaccount
+```
+  - clusterrole `ingress-clusterrole` and its clusterrolebinding `ingress-clusterrole-binding`, bound to serviceaccount
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  name: ingress-clusterrole
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - endpoints
+  - nodes
+  - pods
+  - secrets
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+- apiGroups:
+  - extensions
+  resources:
+  - ingresses/status
+  verbs:
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  name: ingress-clusterrole-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: ingress-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: ingress-serviceaccount
+  namespace: ingress-space
+```
+- deploy the ingress controller
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-controller
+  namespace: ingress-space
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nginx-ingress
+  template:
+    metadata:
+      labels:
+        name: nginx-ingress
+    spec:
+      serviceAccountName: ingress-serviceaccount
+      containers:
+        - name: nginx-ingress-controller
+          image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
+          args:
+            - /nginx-ingress-controller
+            - --configmap=$(POD_NAMESPACE)/nginx-configuration
+            - --default-backend-service=app-space/default-http-backend
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+```
+- create a service to make ingress controller deployment accessible 
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress
+  namespace: ingress-space
+spec:
+  type: NodePort
+  selector:
+    name: nginx-ingress
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30080
+#  - name: https
+#    protocol: TCP
+#    port: 443
+#    targetPort: 443
+```
+- create the ingress resource to make an application accessible via `/wear` and `/watch`
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: app-space
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/wear"
+        backend:
+          service:
+            name: wear-service
+            port:
+              number: 8080
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/watch"
+        backend:
+          service:
+            name: video-service
+            port:
+              number: 8080
+```
