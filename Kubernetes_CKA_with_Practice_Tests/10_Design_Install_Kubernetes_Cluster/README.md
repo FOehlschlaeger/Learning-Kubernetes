@@ -1,6 +1,8 @@
 # Design and Install a Kubernetes Cluster
 
 ## References
+- [Youtube Channel: Setup Kubernetes the Hard Way](https://www.youtube.com/watch?v=uUupRagM7m0&list=PL2We04F3Y_41jYdadX55fdJplDvgNGENo)
+- [Github Repo: Setup Kubernetes the Hard Way](https://github.com/mmumshad/kubernetes-the-hard-way)
 
 ---
 ## Cluster Design
