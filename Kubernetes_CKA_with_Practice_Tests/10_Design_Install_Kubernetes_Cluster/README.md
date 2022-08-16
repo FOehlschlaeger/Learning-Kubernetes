@@ -5,7 +5,7 @@
 - [Github Repo: Setup Kubernetes the Hard Way](https://github.com/mmumshad/kubernetes-the-hard-way)
 
 ---
-## Cluster Design
+## Cluster Design in Udemy Course
 - Local virtual cluster on one machine
 - Virtualbox
 - CNI: Weave Network
@@ -13,9 +13,74 @@
 - 3 Master Nodes with stacked topology (ETCD on master nodes)
 - 2 Worker Nodes
 
+## Design a Kubernetes Cluster
+- purpose
+  - education: `minikube` or single node cluster with `kubeadm`
+- development and testing
+  - multi-node cluster with single master and multiple worker nodes
+  - setup with `kubeadm` tool
+- hosting prodcution applications
+  - highly available multi node cluster with multiple master nodes
+  - `kubeadm` or KOPS on AWS or GCP
+  - upto 5000 nodes
+  - upto 150k pods in cluster
+  - upto 300k total containers
+  - upto 100 pod per node
+- use `kubeadm` for on-prem hosting 
+- storage
+  - high performance: SSd backed storage
+  - multiple concurrent connections: network based storage
+  - persistent shared volumes for shared access across multiple pods
+  - label nodes with specific disk types
+  - use node selectors to assign applications to nodes with specific disk types
+- nodes
+  - virtual or physical machines
+  - minimum of 4 nodes
+  - master vs worker nodes
+  - linux x86_64 architecture
+  - best practice: do not host workloads on master nodes (`kubeadm` adds taint to master nodes to prevent hosting workloads on master nodes)
+  - in large cluster: separate ETCD on extra servers, not stacked cluster with ETCD on master nodes
+
 ## Kubernetes Infrastructure
+- setup on linux with binaries or use linux VMs on Windows since Docker images are linux-based
+- Kubernetes on local machine
+  - `minikube`: deploys VM, only single node cluster
+  - `kubeadm` tool: requires VM to be ready, for single/multi node cluster
+- turnkey solutions self-managed in terms of
+  - provisioning and configuration of VMs
+  - using scripts to deploy cluster
+  - maintaining VMs
+  - `Openshift`: on-prem platform by Redhat
+  - `Cloud Foundry Container Runtime`: open source
+  - `VMWare Cloud PKS`
+  - `Vagrant`
+- hosted solutions as Kubernetes-as-a-Service by Cloud Provider (AWS, GKE)
+
+### Chosen Setup
+- local setup using several VMs on VirtualBox
 
 ## Configuration of High Availability
+- multiple instances of master and control plane components
+- master node usually with controle plane components: ETCD, API Server, Controller Manager, Scheduler
+- `kubectl` utility points to master on `https://master1:6443` (configured in `~/.kube/config` file, to reach kube-API Server)
+- load balancer `https://load-balancer:6443` in front of multiple master nodes to split traffic/requests between api servers `https://master1:6443` and `https://master2:6443`
+  - point `kubectl` to load balancer which forwards traffic to one of kube-api servers (master nodes)
+  - `Nginx` or `HAproxy` as load balancer
+- `controller-manager` and `scheduler` watch state of cluster and pods (recreation via `ReplicaSets` etc.)
+  - one instance is `active`, others are `standby` due to leader-election process
+  - setup instance of `kube-controller-manager --leader-elect true --leader-elect-lease-duration 15s --leader-elect-renew-deadline 10s --leader-elect-retry-period 2s` (default)
+  - the instance updating kube-controller-manager endpoint first becomes leader instance
+  - logs of state are written and acquired when one instance is unavailable
+- ETCD 
+  - stacked topology: ETCD is part of master node with other Kubernetes components
+  - external ETCD topology: ETCD on external servers for higher secure environment
+  - kube-api server needs to point to ETCD servers
+  - `cat /etc/systemd/system/kube-apiserver.service`
+```
+...
+  --etcd-server=https://ETCD-SERVER-IP1:2379,https://ETCD-SERVER-IP2:2379
+...
+```
 
 ## ETCD in HA (High-Availability)
 - ETCD: distributed reliable key-value store that is simple, secure and fast
