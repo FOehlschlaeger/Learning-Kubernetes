@@ -22,6 +22,7 @@
 
 ## Provision VMs using Vagrant
 - install Virtualbox on host machine
+- **for nested VirtualBox usage: in VirtualBox on origin host, activate option `Nested VT-x/AMD-V aktivieren`**
 ```
 sudo apt update
 sudo apt install virtualbox
@@ -144,4 +145,4 @@ vagrant up
 ```
 vagrant ssh kubemaster
 ```
-- **for nested VirtualBox usage: in VirtualBox on origin host, activate option `Nested VT-x/AMD-V aktivieren`**
+
