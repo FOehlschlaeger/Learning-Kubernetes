@@ -21,7 +21,12 @@
 
 
 ## Provision VMs using Vagrant
-- use tool [Vagrant](https://www.vagrantup.com/) and [install it on linux host](https://www.vagrantup.com/docs/installation), where the virtual Kubernetes cluster should be set up
+- install Virtualbox on host machine
+```
+sudo apt update
+sudo apt install virtualbox
+```
+- use tool [Vagrant](https://www.vagrantup.com/) and [install it on linux host](https://www.vagrantup.com/downloads), where the virtual Kubernetes cluster should be set up
 - from repo [KodeKloud: certified-kubernetes-administrator-course](https://github.com/kodekloudhub/certified-kubernetes-administrator-course) use `Vagrantfile`
 - clone repo
 - in `Vagrantfile`
