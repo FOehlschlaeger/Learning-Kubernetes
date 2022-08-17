@@ -50,3 +50,4 @@ vagrant up
 ```
 vagrant ssh kubemaster
 ```
+- **for nested VirtualBox usage: in VirtualBox on origin host, activate option `Nested VT-x/AMD-V aktivieren`**
