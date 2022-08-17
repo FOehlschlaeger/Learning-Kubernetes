@@ -145,4 +145,15 @@ vagrant up
 ```
 vagrant ssh kubemaster
 ```
-
+- stop VMs
+```
+vagrant halt
+```
+- update single VM from config `Vagrantfile`, i.e. `kubenode01`
+```
+vagrant reload kubenode01
+```
+- delete single VM, i.e. `kubenode01`
+```
+vagrant destroy kubenode01
+```
