@@ -18,6 +18,9 @@ This project aims to learn Kubernetes to prepare for the [CKA certification](htt
 - https://github.com/cncf/curriculum
 
 ### Udemy
+
+- https://github.com/kodekloudhub/certified-kubernetes-administrator-course
+
 #### CKA
 The Udemy course [Certified Kubernetes Administrator with practice tests](https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/) is also used in terms of understanding Kubernetes and preparation for the certification.
 
