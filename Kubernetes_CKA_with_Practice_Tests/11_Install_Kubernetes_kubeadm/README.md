@@ -18,3 +18,30 @@
   - initialize master server to install and configure all required components on master server 
   - **before joining worker nodes: ensure network prerequisites are met for the Kubernetes Pod Network**
   - join worker nodes to master node to form a kubernetes cluster
+
+
+## Provision VMs using Vagrant
+- use tool [Vagrant](https://www.vagrantup.com/) and [install it on linux host](https://www.vagrantup.com/docs/installation), where the virtual Kubernetes cluster should be set up
+- from repo [KodeKloud: certified-kubernetes-administrator-course](https://github.com/kodekloudhub/certified-kubernetes-administrator-course) use `Vagrantfile`
+- clone repo
+- in `Vagrantfile`
+```
+...
+NUM_MASTER_NODE = 1 # number of master nodes to provision
+NUM_WORKER_NODE = 2 # number of worker nodes to provision
+
+IP_NW = "192.168.56." # network range for VMs
+...
+```
+- check status of VMs
+```
+vagrant status
+```
+- set up and provision VMs using vagrant, first master, then both worker nodes
+```
+vagrant up
+```
+- ssh into one machine, i.e. `kubemaster`
+```
+vagrant ssh kubemaster
+```
