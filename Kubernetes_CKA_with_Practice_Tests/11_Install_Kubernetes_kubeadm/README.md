@@ -83,6 +83,7 @@ kubeadm join 10.35.215.6:6443 --token <TOKEN> --discovery-token-ca-cert-hash sha
 ```
 
 ## Install CNI ([flannel](https://github.com/flannel-io/flannel))
+From output of `kubeadm init <arguments>` the installation of a pod network is recommended as next step. Follow the instruction given in the output to install one of the [officially recommended CNI tools](https://kubernetes.io/docs/concepts/cluster-administration/addons/), for example `flannel` or `calico`: 
 ```
 kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
 ```
