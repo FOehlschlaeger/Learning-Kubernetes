@@ -14,12 +14,12 @@
 - high-level steps:
   - have multiple VMs/servers for configuring a cluster and designate master and worker nodes across machines
   - install container runtime (such as `containerd`, `docker`) on each host machine
-  - install `kubeadm` tool on all nodes
+  - install `kubeadm` tool with `kubelet` and `kubectl` on all nodes
   - initialize master server to install and configure all required components on master server 
   - **before joining worker nodes: ensure network prerequisites are met for the Kubernetes Pod Network**
   - join worker nodes to master node to form a kubernetes cluster
 
-
+---
 ## Provision VMs using Vagrant
 - install Virtualbox on host machine
 - **for nested VirtualBox usage: in VirtualBox on origin host, activate option `Nested VT-x/AMD-V aktivieren`**
@@ -53,4 +53,33 @@ vagrant reload kubenode01
 - delete single VM, i.e. `kubenode01`
 ```
 vagrant destroy kubenode01
+```
+
+---
+## Initialize controlplane using `kubeadm` and arguments
+```
+kubeadm init --apiserver-advertise-address=10.35.215.6 --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=controlplane
+```
+
+## Setup default .kube/config file
+```
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+## Join other nodes to cluster
+Create new token to join using on controlplane node
+```
+kubeadm token create --print-join-command
+```
+
+or from output of `kubeadm init` command
+```
+kubeadm join 10.35.215.6:6443 --token <TOKEN> --discovery-token-ca-cert-hash sha256:<HASH>
+```
+
+## Install CNI ([flannel](https://github.com/flannel-io/flannel))
+```
+kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
 ```
