@@ -58,7 +58,10 @@ vagrant destroy kubenode01
 ---
 ## Initialize controlplane using `kubeadm` and arguments
 ```
-kubeadm init --apiserver-advertise-address=10.35.215.6 --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=controlplane
+kubeadm init \
+  --apiserver-advertise-address=10.35.215.6 \
+  --pod-network-cidr=10.244.0.0/16 \
+  --apiserver-cert-extra-sans=controlplane
 ```
 
 ## Setup default .kube/config file
