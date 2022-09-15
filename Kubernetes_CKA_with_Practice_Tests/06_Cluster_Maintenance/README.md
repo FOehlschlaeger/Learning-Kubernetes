@@ -190,3 +190,41 @@ service etcd restart
 service kube-apiserver start
 ```
 
+#### Check if `etcd` is external
+- switch context in case of setup with several kubernetes clusters, visible in `$HOME/.kube/config`
+```
+kubectl config use-context <context-name>
+```
+- check running pods in namespace `kube-system` and files at `/etc/kubernetes/manifests` on controlplane for static pods
+- check running processes `ps aux | grep etcd` for process `kube-apiserver` and the config referring to external etcd store
+
+#### Locate default data directory of external etcd store
+- identify IP address of external etcd server via `ps aux | grep etcd` on controlplane node of cluster with external etcd store
+- switch to external etcd server
+- check running processes with `ps aux | grep etcd`
+
+#### Check members of `etcd` cluster
+- ssh to external etcd server
+```
+ETCDCTL_API=3 etcdctl \
+ --endpoints=https://127.0.0.1:2379 \
+ --cacert=/etc/etcd/pki/ca.pem \
+ --cert=/etc/etcd/pki/etcd.pem \
+ --key=/etc/etcd/pki/etcd-key.pem \
+  member list
+```
+
+#### Backup etcd store of kubernetes cluster with stacked etcd store
+- get `pki` credentials information to create backup
+```
+kubectl describe  pods -n kube-system etcd-cluster1-controlplane  | grep advertise-client-urls
+```
+```
+kubectl describe  pods -n kube-system etcd-cluster1-controlplane  | grep pki
+```
+
+### Backup etcd store of cluster with external etcd store
+- 
+```
+
+```
