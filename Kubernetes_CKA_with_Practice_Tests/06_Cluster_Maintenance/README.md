@@ -222,6 +222,14 @@ kubectl describe  pods -n kube-system etcd-cluster1-controlplane  | grep adverti
 ```
 kubectl describe  pods -n kube-system etcd-cluster1-controlplane  | grep pki
 ```
+- log into controlplane node with `etcdctl` installed
+```
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/peer.crt --key=/etc/kubernetes/pki/etcd/peer.key snapshot save ./cluster1.db
+```
+- copy snapshot from controlplane node to local node into target directory
+```
+scp <controlplane-ip>:/root/cluster1.db /opt/
+```
 
 ### Backup etcd store of cluster with external etcd store
 - 
