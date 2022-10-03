@@ -35,6 +35,7 @@ Topic in CKAD
   - Liveness and Readiness Probes
 - Storage
   - StatefulSets
+- Service Accounts
 
 ---
 ## Cluster Architecture Setup
