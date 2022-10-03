@@ -8,6 +8,7 @@
 
 ### Backup and Restore
 - https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster
+- https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#restoring-an-etcd-cluster
 - https://github.com/etcd-io/website/blob/main/content/en/docs/v3.5/op-guide/recovery.md
 - https://www.youtube.com/watch?v=qRPNuT080Hk
 
@@ -222,7 +223,7 @@ kubectl describe  pods -n kube-system etcd-cluster1-controlplane  | grep adverti
 ```
 kubectl describe  pods -n kube-system etcd-cluster1-controlplane  | grep pki
 ```
-- log into controlplane node with `etcdctl` installed
+- log into controlplane node with `etcdctl` installed and create a snapshot/backup via `snapshot save`
 ```
 ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt --cert=/etc/kubernetes/pki/etcd/peer.crt --key=/etc/kubernetes/pki/etcd/peer.key snapshot save ./cluster1.db
 ```
