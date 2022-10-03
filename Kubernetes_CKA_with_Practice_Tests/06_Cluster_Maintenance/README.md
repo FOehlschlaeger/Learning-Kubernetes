@@ -231,8 +231,33 @@ ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=/etc/kubernete
 scp <controlplane-ip>:/root/cluster1.db /opt/
 ```
 
-### Backup etcd store of cluster with external etcd store
-- 
+### Restore backup of etcd store of cluster with external etcd store
+- copy existing backup file to external etcd server
 ```
+scp /opt/cluster2.db etcd-server:/root/
+```
+- use `etcdctl` to restore snapshot with new `data-dir` location
+```
+ETCDCTL_API=3 etcdctl snapshot restore --endpoints=https://<etcd-ip>:2379 --cacert=<etcd-cacert> --cert=<etcd-cert> --key=<etcd-keyfile> --data-dir=<new-location> <snapshot-file.db>
+```
+for example:
+```
+ETCDCTL_API=3 etcdctl snapshot restore --endpoints=localhost:2379 --key=/etc/kubernetes/pki/etcd/etcd-key.pem --cacert=/etc/kubernetes/pki/etcd/etcd.pem --cert=/etc/kubernetes/pki/etcd/ca.pem --data-dir=/var/lib/etcd-data-new cluster2.db
+```
+- update systemd service unit by adding the new location for `data-dir`
+```
+nano /etc/systemd/system/etcd.service
+```
+- check permissions of user on new `data-dir`
+```
+chown -R etcd:etcd <new-data-dir-location>
+```
+- Reload and restart the `etcd` service
+```
+systemctl daemon-reload
+```
+```
+system restart etcd
+```
+- recommended to restart controlplane components (kube-scheduler, kube-controller-manager, kubelet)
 
-```
