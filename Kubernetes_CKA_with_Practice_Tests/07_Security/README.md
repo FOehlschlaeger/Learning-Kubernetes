@@ -51,6 +51,7 @@
   - certificate authority: organization for signing and validation of certificates after sending a certificate signing request (CSR)
 - public key files ending with `.crt` or `.pem`
 - private key files ending with `.key` or `-key.pem` (substring `key` in filename)
+- pki = public key infrastructure
 
 ## TLS in Kubernetes
 - inter-node communication needs to be encrpyted
