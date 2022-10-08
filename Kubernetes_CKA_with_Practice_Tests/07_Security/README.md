@@ -186,6 +186,10 @@ users: # array to add several users
 
 ## Authorization
 
+- `RBAC` = Role Based Access Control
+- Create a new `Role` 
+- Connect user to new role via `Rolebinding`
+
 ### Roles and RoleBindings
 - example for `Role`
 ```yaml
@@ -195,7 +199,7 @@ metadata:
   name: developer
   namespace: blue
 rules:
-- apiGroups:
+- apiGroups: # api (default core api group), apis, rbac.authorization.k8s.io, network.k8s.io, ...
   - apps
   resources:
   - pods
