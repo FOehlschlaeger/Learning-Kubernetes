@@ -189,6 +189,7 @@ users: # array to add several users
 - `RBAC` = Role Based Access Control
 - Create a new `Role` 
 - Connect user to new role via `Rolebinding`
+- `Role` and `Rolebinding` fall under scope of `namespaces` 
 
 ### Roles and RoleBindings
 - example for `Role`
@@ -199,12 +200,12 @@ metadata:
   name: developer
   namespace: blue
 rules:
-- apiGroups: # api (default core api group), apis, rbac.authorization.k8s.io, network.k8s.io, ...
+- apiGroups: # api (default core api group), apis, rbac.authorization.k8s.io, network.k8s.io, [""] for all apiGroups
   - apps
-  resources:
+  resources: # [""] for all resources
   - pods
   - deployments
-  verbs:
+  verbs: # [""] for all verbs
   - list
   - create
   - delete
@@ -225,6 +226,36 @@ subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: User
   name: dev-user
+```
+
+### Checking access
+```
+kubectl auth can-i create deployments
+```
+- check as another user and in specific namespace
+```
+kubectl auth can-i create deployments --as dev-user --namespace prod
+```
+
+### Restrict access to specific resources
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer
+  namespace: blue
+rules:
+- apiGroups: # api (default core api group), apis, rbac.authorization.k8s.io, network.k8s.io, [""] for all apiGroups
+  - apps
+  resources: # [""] for all resources
+  - pods
+  - deployments
+  verbs: # [""] for all verbs
+  - list
+  - create
+  - delete
+  - get
+  resourceNames: ["blue", "orange"] # restrict acess to pods "blue" and "orange"
 ```
 
 ## Image Security
