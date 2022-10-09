@@ -348,9 +348,23 @@ spec:
 ```
 
 ## [Security Context](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/)
+- Docker runs containers as `root` users by default, but `root` user in container has restricted capabilities compared to `root` user of host
+```
+docker run --user=1000 ubuntu sleep 3600 # run container with process user id 1000, ps aux
+```
+- definition in Dockerfile
+```Dockerfile
+FROM ubuntu
+
+USER 1000
+...
+```
+- settings can be set on container and on pod
+- settings on container will override settings of pod
 - a security context defines privilege and access control settings for a Pod or Container
 - add `securityContext` in pod or container definition
-- `Capabilities` are only available in `securityContext` section in container definition
+- **`Capabilities` are only available in `securityContext` section in container definition**
+- container level:
 ```yaml
 ...
 spec:
@@ -361,6 +375,17 @@ spec:
       runAsUser: 1000 #root
       capabilities:
         add: ["NET_ADMIN", "SYS_TIME"]
+...
+```
+- pod level:
+```yaml
+...
+spec:
+  securityContext:
+    runAsUser: 1000 #root
+  containers:
+  - name: sec-ctx-4
+    image: gcr.io/google-samples/node-hello:1.0
 ...
 ```
 
