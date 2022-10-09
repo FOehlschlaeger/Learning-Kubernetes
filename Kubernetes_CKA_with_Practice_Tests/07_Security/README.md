@@ -327,7 +327,7 @@ annotations:
 - calling `image: nginx` in pod/deployment definition, is actually calling: `docker.io/library/nginx`
 - use private image registry with credentials
 - create secret with credentials
-- **important note: `docker-registry` is a build-in secret type**
+- [**important note: `docker-registry` is a build-in secret type**](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
 ```commandline
 kubectl create secret docker-registry regcred \
   --docker-server= private-registry.io \
