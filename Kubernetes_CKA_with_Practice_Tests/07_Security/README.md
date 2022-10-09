@@ -184,6 +184,31 @@ users: # array to add several users
 - better to input base64 encoded content of certificate files using `cat <file> | base64`
   - for decoding: `echo -n <string-to-decode> | base64 --decode`
 
+## API Groups
+- all kubernetes resources are grouped ito different API groups
+- top level API group: core API group
+- then: named API group with one for each section, within there are the resources, each of which having specific verbs, such as `/apps` with `/v1`, with `/deployments`, `/replicasets` etc.
+- `/deployments` with verbs: `list`, `get`, `create`, `delete`, `watch`, `update`, etc.
+- accessing kubernetes API via `curl` does not give all information since no authentication information was specified
+```
+curl http://localhost:6443 -k
+```
+- accessing kubernetes API via `curl` and authentication information
+```
+curl http://localhost:6443 -k
+  --key admin.key
+  --cert admin.crt
+  --cacert ca.crt
+```
+- alternatively, access kubernetes API via `kubectl proxy` uses Kubernetes certificates from `$HOME/.kube/config` to proxy to Kubernetes API with all information
+```
+kubectl proxy # open port on 127.0.0.1:8001
+```
+- access the started proxy
+```
+curl http://localhost:8001 -k
+```
+
 ## Authorization
 
 - `RBAC` = Role Based Access Control
@@ -320,7 +345,7 @@ spec:
   - from: 
     # selector rules and ipBlock are OR correlated
     # selector rules within array are AND correlated
-    # both pod and namespae label must match
+    # both pod and namespace label must match
     - podSelector: # allow pods with this label
         matchLabels:
           name: api-pod
