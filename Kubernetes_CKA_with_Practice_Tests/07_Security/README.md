@@ -400,6 +400,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: db-policy
+  namespace: prod # namespace can be set to restrict policy only to pods in this namespace
 spec:
   podSelector:
     matchLabels:
@@ -408,16 +409,16 @@ spec:
   - Ingress
   ingress:
   - from: 
-    # selector rules and ipBlock are OR correlated
-    # selector rules within array are AND correlated
+    # selector rules and ipBlock on the from:-section are OR correlated
+    # selector rules within one array of the from:-section are AND correlated
     # both pod and namespace label must match
     - podSelector: # allow pods with this label
         matchLabels:
           name: api-pod
-      namespaceSelector: # namespace must be labeled beforehand
+      namespaceSelector: # allow all pods in namespace, but namespace must be labeled beforehand
         matchLabels:
           name: prod
-    - ipBlock: # allow specific IP
+    - ipBlock: # allow specific IP or ranges of IP addresses for traffic to pod
         cidr: 192.168.5.10/32
     ports:
     - protocol: TCP
