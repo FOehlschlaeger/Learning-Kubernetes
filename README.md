@@ -38,6 +38,15 @@ Topic in CKAD
 - Service Accounts
 
 ---
+## Kubernetes Command Line Tools
+
+#### `kubectx`
+- 
+
+#### `kubens`
+- 
+
+---
 ## Cluster Architecture Setup
 
 - which VMs?
