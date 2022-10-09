@@ -283,6 +283,46 @@ rules:
   resourceNames: ["blue", "orange"] # restrict acess to pods "blue" and "orange"
 ```
 
+## Service Accounts
+- service accounts are accounts for non-human services or applications interacting with kubernetes API
+- creating a service account creates a secret, which stores the token of the service account for authentication to be authorized to query the kubernetes API
+```
+kubectl create serviceaccount <name-of-sa>
+```
+- `Token` refers to a secret created at service account creation, storing the actual token information
+```
+kubectl describe serviceaccount <name-of-sa
+```
+- this token has to be used by external application to authenticate to kubernetes API as `bearer token`
+```
+kubectl describe secret <secret-in-token-of-sa>
+```
+- for applications run in kubernetes cluster themselves, the secret with service account token can be mounted as secret volume in application pod
+- default service account is mounted automatically to each new created pod, at `Mounts:` path available inside the pod
+- token of default service account is in JWT format, without expiration date (which causes security issues)
+- mounting a new service account to pod, the pod definition needs to be updated at `spec:serviceAccountName=<new-sa-name>`
+- you can not change the serviceaccount of an existing pod, so the pod needs to be recreated, in deployment a new rollout will be initiated after changing the service account in deployment definition
+- avoid automatically mounting of default service account via: `autoMountServiceAccountToken: False` in pod definition
+- since `v1.22` the `TokenRequestAPI` is used to create a token with expiring date due to security issues, mounted as `projected volume` into the pod 
+- since `v1.24` the token is no longer created automacically when creating a service account, and needs to be created manually
+```
+# create a new serviceaccount
+kubectl create serviceaccount <name-of-sa>
+# create a new token belonging to that new service account
+kubectl create token <name-of-sa>
+```
+- this created token has a expiring date of one hour after creation (default)
+- to create a service account with token without expiring date, create service account first and afterwards the secret (**not recommended, only without accessto TokenRequestAPI**)
+```yaml
+apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  name: mysecretname
+annotations:
+  kubernetes.io/service-account.name: <name-of-sa>
+```
+
 ## Image Security
 - calling `image: nginx` in pod/deployment definition, is actually calling: `docker.io/library/nginx`
 - use private image registry with credentials
