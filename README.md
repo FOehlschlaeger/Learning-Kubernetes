@@ -40,11 +40,45 @@ Topic in CKAD
 ---
 ## Kubernetes Command Line Tools
 
-#### `kubectx`
-- 
+#### [`kubectx`](https://github.com/ahmetb/kubectx)
+- tool to switch contexts between clusters in a multi-cluster environment
+- installation
+```
+sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
+```
+- to list all contexts
+```
+kubectx
+```
+- to switch to a new context
+```
+kubectx <context_name>
+```
+- switch back to previous context
+```
+kubectx -
+```
+- to see the current context
+```
+kubectx -c
+```
 
 #### `kubens`
-- 
+- toll allowing users to switch between namespaces with a simple command
+- installation
+```
+sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
+```
+- to switch to a namespace
+```
+kubens <new_namespaces>
+```
+- to switch back to previous namespace
+```
+kubens -
+```
 
 ---
 ## Cluster Architecture Setup
