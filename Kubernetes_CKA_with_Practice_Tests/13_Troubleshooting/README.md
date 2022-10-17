@@ -38,6 +38,7 @@ kubectl get pod -A
 kubectl -n kube-system get pod
 ```
 - check all parameters and commands inside of control plane components if configured correctly, such as `--kubeconfig`
+- check if all mounted volumes (i.e. `hostPath`) in pod or deployment are correct and existing, valid directories
 
 ## Worker Node Failures
 - 
