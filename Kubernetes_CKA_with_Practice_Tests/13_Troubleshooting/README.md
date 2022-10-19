@@ -55,7 +55,7 @@ If worker node is not part of the Kubernetes cluster, i.e. not appearing via `ku
 - kubelet service is running, but error in configuration
   - check via `journalctl -u kubelet`
   - error such as `connection refused`, such as wrong address and port of API server
-  - fix error in `kubeconfig` at `/etc/kubernetes/kubelet.conf`
+  - fix error in `kubeconfig` at `/etc/kubernetes/kubelet.conf` o node
   - restart `kubelet` service on node
   - check if node is correctly working and integrated into Kubernetes cluster
 
