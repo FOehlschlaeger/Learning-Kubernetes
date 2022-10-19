@@ -41,7 +41,23 @@ kubectl -n kube-system get pod
 - check if all mounted volumes (i.e. `hostPath`) in pod or deployment are correct and existing, valid directories
 
 ## Worker Node Failures
-- 
+If worker node is not part of the Kubernetes cluster, i.e. not appearing via `kubectl get nodes`: 
+- stopped `kubelet` service
+  - check the status of services on the nodes, for example: `systemctl status kubelet` 
+  - check the service logs using `journalcrl -u kubelet`
+  - if the service is stopped, start the stopped service or run `ssh <missing-node> "service kubelet start"`
+- error in `kubelet` service
+  - check error messages via `journalctl -u kubelet`
+  - maybe, miss configuration in config file of `kubelet`
+  - fix parameter in config file: `/ar/lib/kubelet/config.yaml`
+  - restart service on node 
+  - check if node is correctly working and integrated into Kubernetes cluster
+- kubelet service is running, but error in configuration
+  - check via `journalctl -u kubelet`
+  - error such as `connection refused`, such as wrong address and port of API server
+  - fix error in `kubeconfig` at `/etc/kubernetes/kubelet.conf`
+  - restart `kubelet` service on node
+  - check if node is correctly working and integrated into Kubernetes cluster
 
 ## Networking Failures
 - 
