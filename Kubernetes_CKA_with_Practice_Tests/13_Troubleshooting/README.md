@@ -60,4 +60,15 @@ If worker node is not part of the Kubernetes cluster, i.e. not appearing via `ku
   - check if node is correctly working and integrated into Kubernetes cluster
 
 ## Networking Failures
-- 
+If no valid IP addresses are assigned or are there no valid endpoints of the services
+- in `kubernetes.io/docs/`: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#pod-network
+- install WeaveNet plugin via `kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml`
+
+If the `kube-proxy` in `kubectl -n kube-system get pod` is not working
+- check the logs of the pod via `kubectl -n kube-system logs <kube-proxy pod>`
+- check description of the `kube-proxy` daemonset
+- check values in configmap of `kube-proxy` using `kubectl -n kube-system get cm kube-proxy -o yaml` or ``kubectl -n kube-system describe cm kube-proxy`
+- compare parameters between daemonset and the configmap of `kube-proxy` for invalid, unmatching values, such as wrong filenames of config files (**in the configmap the filename might be **)
+- update and edit the daemonset via `kubectl -n kube-system edit ds kube-proxy`
+- delete running pod to recreate the pod using the updated parameters via `kubectl -n kube-system delete pod <kube-proxy-pod-name>`
+
