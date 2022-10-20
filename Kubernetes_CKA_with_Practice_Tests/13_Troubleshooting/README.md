@@ -68,7 +68,7 @@ If the `kube-proxy` in `kubectl -n kube-system get pod` is not working
 - check the logs of the pod via `kubectl -n kube-system logs <kube-proxy pod>`
 - check description of the `kube-proxy` daemonset
 - check values in configmap of `kube-proxy` using `kubectl -n kube-system get cm kube-proxy -o yaml` or ``kubectl -n kube-system describe cm kube-proxy`
-- compare parameters between daemonset and the configmap of `kube-proxy` for invalid, unmatching values, such as wrong filenames of config files (**in the configmap the filename might be **)
+- compare parameters between daemonset and the configmap of `kube-proxy` for invalid, unmatching values, such as wrong filenames of config files (**in the configmap the filename is one of the first parameter, not the listed values**)
 - update and edit the daemonset via `kubectl -n kube-system edit ds kube-proxy`
 - delete running pod to recreate the pod using the updated parameters via `kubectl -n kube-system delete pod <kube-proxy-pod-name>`
 
