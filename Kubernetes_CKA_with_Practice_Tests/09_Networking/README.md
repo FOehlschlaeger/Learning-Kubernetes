@@ -1,5 +1,7 @@
 # Networking
 
+See also the section [Troubleshooting Network](https://github.com/FOehlschlaeger/Learning-Kubernetes/blob/main/Kubernetes_CKA_with_Practice_Tests/13_Troubleshooting/README.md)
+
 ## Resources
 - https://github.com/kubernetes/dns/blob/master/docs/specification.md
 - https://coredns.io/plugins/kubernetes/
