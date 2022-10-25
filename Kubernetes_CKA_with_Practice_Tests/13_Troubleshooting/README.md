@@ -31,6 +31,7 @@ kubeclt -n <namespace> replace --force -f /tmp/<filename-from-edit-command>
 ```
 
 ## Control Plane Failures
+- if cluster is setup using `kubeadm` tool
 - check all control plane components / pods if working correctly
 ```
 kubectl get pod -A
@@ -39,6 +40,37 @@ kubectl -n kube-system get pod
 ```
 - check all parameters and commands inside of control plane components if configured correctly, such as `--kubeconfig`
 - check if all mounted volumes (i.e. `hostPath`) in pod or deployment are correct and existing, valid directories
+- **on master nodes**: check running controlplane services
+```
+# kube-apiserver
+service kube-apiserver status
+# kube-controller-manager
+service kube-controller-manager status
+# kube-scheduler
+service kube-scheduler status
+```
+```
+systemctl status kube-apiserver
+systemctl status kube-controller-manager
+systemctl status kube-scheduler
+```
+- **on worker nodes**: check running node services
+```
+# kubelet
+service kubelet status
+# kube-proxy
+service kube-proxystatus
+```
+```
+systemctl status kubelet
+systemctl status kube-proxy
+```
+- check logs of running controlplane components
+```
+kubectl logs kube-apiserver-master -n kube-system
+# or use hosts logging solution
+sudo journalctl -u kube-apiserver
+```
 
 ## Worker Node Failures
 If worker node is not part of the Kubernetes cluster, i.e. not appearing via `kubectl get nodes`: 
