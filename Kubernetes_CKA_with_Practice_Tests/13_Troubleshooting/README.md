@@ -73,6 +73,27 @@ sudo journalctl -u kube-apiserver
 ```
 
 ## Worker Node Failures
+- Check node details
+- Check `Conditions = [True | False | Unknown]` of node that indicate status of nodes via
+```
+kubectl describe node <node-name>
+```
+- Condition status set to `Unknown` when worker node has no connection to master node
+- to bring node back up if crashed, check memory and CPU usage via ´top´ and `df -h`
+- check status of `kubelet` and `kubelet logs`
+```
+service kubelet status
+#
+systemctl status kubelet
+#
+sudo journalctl -u kubelet
+```
+- check kubelet certificates for validity
+```
+openssl x509 -in /var/lib/kubelet/worker-1.crt -text
+```
+
+### Possible cases
 If worker node is not part of the Kubernetes cluster, i.e. not appearing via `kubectl get nodes`: 
 - stopped `kubelet` service
   - check the status of services on the nodes, for example: `systemctl status kubelet` 
