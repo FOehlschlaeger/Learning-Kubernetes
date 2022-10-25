@@ -4,6 +4,7 @@
 - [Troubleshooting Applications](https://kubernetes.io/docs/tasks/debug/debug-application/)
 - [Troubleshooting Cluster](https://kubernetes.io/docs/tasks/debug/debug-cluster/)
 - [Troubleshooting kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/troubleshooting-kubeadm/)
+- [Kubelet Integration and Configuration](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/)
 
 ## Application Failure
 Possible reasons and causes for application failures to check while troubleshooting:
@@ -97,13 +98,14 @@ openssl x509 -in /var/lib/kubelet/worker-1.crt -text
 If worker node is not part of the Kubernetes cluster, i.e. not appearing via `kubectl get nodes`: 
 - stopped `kubelet` service
   - check the status of services on the nodes, for example: `systemctl status kubelet` 
-  - check the service logs using `journalcrl -u kubelet`
-  - if the service is stopped, start the stopped service or run `ssh <missing-node> "service kubelet start"`
+  - check the service logs using `journalctl -u kubelet`
+  - if the service is stopped, start the stopped service directly on the worker or run `ssh <missing-node> "service kubelet start"` or via `systemctl start kubelet`
 - error in `kubelet` service
   - check error messages via `journalctl -u kubelet`
   - maybe, miss configuration in config file of `kubelet`
-  - fix parameter in config file: `/ar/lib/kubelet/config.yaml`
-  - restart service on node 
+  -path to kubelet config file with contexts, clusters etc.: `/etc/kubernetes/kubelet.conf`
+  - fix parameter in kubelet service config file: `/var/lib/kubelet/config.yaml`
+  - restart service on node: `systemctl restart kubelet`
   - check if node is correctly working and integrated into Kubernetes cluster
 - kubelet service is running, but error in configuration
   - check via `journalctl -u kubelet`
