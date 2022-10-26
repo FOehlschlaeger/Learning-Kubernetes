@@ -26,7 +26,7 @@ Kodekloud Login with Google Credentials
 ]
 ```
 - Query elements from list (addressable via index due to ordered structure):
-```json
+```
 $[0] # first element ["car"]
 $[0,3] # first and fourth element
 $[0:3] # get first to fourth element [START : END], fourht element is excluded
@@ -86,7 +86,7 @@ $[-3:] # last three elements of list
 ]
 ```
 - Query element from list of dictionaries
-```json
+```
 # model of second wheel of car
 $[0].wheels[1].model # "B"
 
@@ -136,11 +136,11 @@ Create query based on criteria to filter an array
 ]
 ```
 - Query for list elements greater than 15
-```json
+```
 $[ ?( @ > 15 )] # other oerators: ==, !=, in [...], nin [...]
 ```
 - Query car model of rear-right wheel of upper example
-```json
+```
 $[0].wheel[?(@.location == "rear-right")].model
 ```
 
@@ -153,18 +153,18 @@ Dictionary:
     "color": "blue",
     "price": "20,000"
   },
-  "bus: {
+  "bus": {
     "color": "white",
     "price": "120,000"
   }
 }
 ```
 Query:
-```json
+```
 $.*.color # ["blue", "white"]
 ```
 - Query to extract models of all wheels of car and bus
-```json
+```
 $.*.wheels[*].model
 ```
 - Exercise example:
@@ -392,7 +392,7 @@ $.*.wheels[*].model
 ```
 - Find "Malala" in list of Noble Prize Winners
 Query:
-```json
+```
 $.prizes[*].laureates[?(@.firstname == "Malala")]
 ```
 Output:
@@ -408,10 +408,10 @@ Output:
 ]
 ```
 - Find the first names of all winners
-```json
+```
 $.prizes[*].laureates[*].firstname
 ```
 - Find the first names of alle winners of year 2014
-```json
+```
 $.prizes[?(@.year == "2014")].laureates[*].firstname
 ```
