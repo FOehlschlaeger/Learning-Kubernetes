@@ -7,6 +7,7 @@ See also https://github.com/FOehlschlaeger/Learning-Kubernetes/tree/main/JSON-Pa
 - large data sets with many nodes and Kubernetes ressources
 
 ### Examples
+- Output of `kubectl` command in JSON format
 ```json
 {
   "apiVersion": "v1",
