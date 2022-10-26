@@ -214,4 +214,24 @@ kubectl get nodes --sort-by=.metadata.name
 kubectl get nodes --sort-by=.status.capacity.cpu
 ```
 
-
+### Examples
+- Use JSON Path query to retrieve the `osImages` of all the nodes and store it in the file `/opt/outputs/nodes_os.txt`
+```
+kubectl get nodes -o=jsonpath={'.items[*].status.nodeInfo.osImage'} > /opt/outputs/nodes_os.txt
+```
+- Get the usernames from a specific kube-config file at `root/my-kube-config` and store them in the file `/opt/outputs/users.txt`
+```
+kubectl config view --kubeconfig=/root/my-kube-config -o=jsonpath='{.users[*].name}' > /opt/outputs/users.txt
+```
+- sort existing persistent volumes based on their capacity and store results in the file `/opt/outputs/storage-capacity-sorted.txt`
+```
+kubectl get pv --sort-by=.spec.capacity.storage > /opt/outputs/storage-capacity-sorted.txt
+```
+- Retrieve just the first two colums as NAME and CAPACITY, while remaining the sorting by capacity of persistent volumes
+```
+kubectl get pv -o=custom-columns=NAME:.metadata.name,CAPACITY:.spec.capacity.storage --sort-by=.spec.capacity.storage > /opt/outputs/pv-and-capacity-sorted.txt
+```
+- Use JSON Path to identify the context configured for the `aws-user` in the `/root/my-kube-config` file and store the result in `/opt/outputs/aws-context-name`
+```
+kubectl config --kubeconfig=/root/my-kube-config view -o=jsonpath='{.contexts[?(@.context.user == "aws-user")].name}' > /opt/outputs/aws-context-name
+```
