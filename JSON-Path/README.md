@@ -57,8 +57,8 @@ $[0,3] # first and fourth element
     ]
   }, 
   "bus": {
-      "color": "white",
-      "price": "120,000",
+    "color": "white",
+    "price": "120,000",
     "wheels": [
       {
         "model": "A",
