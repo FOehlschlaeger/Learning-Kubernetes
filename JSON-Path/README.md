@@ -29,6 +29,11 @@ Kodekloud Login with Google Credentials
 ```
 $[0] # first element ["car"]
 $[0,3] # first and fourth element
+$[0:3] # get first to fourth element [START : END], fourht element is excluded
+$[0:8:2] # step of two
+$[-1] # last element of list, but this does not work in certain implementations
+$[-1:0] # last element of list
+$[-3:] # last three elements of list
 ```
 
 ### List of Dictionaries
@@ -84,6 +89,9 @@ $[0,3] # first and fourth element
 ```
 # model of second wheel of car
 $[0].wheels[1].model # "B"
+
+# get models of second wheel of all items in list
+$[*].wheels[1].model # "B"
 ```
 
 ### Root element (car and bus are items of root dictionary)
